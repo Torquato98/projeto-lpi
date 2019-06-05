@@ -99,13 +99,14 @@ public class Instituicao{
     
     public boolean delete(Connection conn){
         boolean result = false;
+        //Isso aqui é um comentário para teste
         String query = "DELETE FROM instituicao WHERE id = ?";
         try{
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(0, this.getNome());
             stmt.setInt(1, this.getId());
             stmt.execute();
-            
+
             result = true;
         }catch(Exception e){
             e.printStackTrace();
