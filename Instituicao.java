@@ -1,3 +1,9 @@
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+
 public class Instituicao{
 
     private int id;
@@ -99,7 +105,6 @@ public class Instituicao{
     
     public boolean delete(Connection conn){
         boolean result = false;
-        //Isso aqui é um comentário para teste
         String query = "DELETE FROM instituicao WHERE id = ?";
         try{
             PreparedStatement stmt = conn.prepareStatement(query);

@@ -13,6 +13,10 @@ public class AreaDeConhecimento{
     public AreaDeConhecimento(){
 
     }
+    
+    public AreaDeConhecimento(int id){
+         this.id = id;
+    }
 
     public AreaDeConhecimento(int id, String nome, GrandeAreaDeConhecimento grandeAreaDeConhecimento){
         this.id = id;
