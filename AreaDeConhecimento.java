@@ -14,9 +14,8 @@ public class AreaDeConhecimento{
 
     }
     
-    public AreaDeConhecimento(int id, String nome){
+    public AreaDeConhecimento(int id){
          this.id = id;
-         this.nome = nome;
     }
 
     public AreaDeConhecimento(int id, String nome, GrandeAreaDeConhecimento grandeAreaDeConhecimento){

@@ -12,20 +12,21 @@ public class Projeto{
    private String titulo;
    private Time duracao;
    private double orcamento;
-   private GrandeAreaDeConhecimento grandeAreaDeConhecimento;
+   private AreaDeConhecimento areaDeConhecimento;
    private Date dataResposta;
    private int resposta = -1;
+   private Instituicao instituicao;
 
    public Projeto(){
     
    }
 
-   public Projeto(int id, String titulo, Time duracao, double orcamento, GrandeAreaDeConhecimento grandeAreaDeConhecimento, Date dataDeResposta, int resposta){
+   public Projeto(int id, String titulo, Time duracao, double orcamento, AreaDeConhecimento areaDeConhecimento, Date dataDeResposta, int resposta){
       this.id = id;
       this.titulo = titulo;
       this.duracao = duracao;
       this.orcamento = orcamento;
-      this.grandeAreaDeConhecimento = grandeAreaDeConhecimento;
+      this.areaDeConhecimento = areaDeConhecimento;
    }
 
    public void setId(int id){
@@ -44,8 +45,8 @@ public class Projeto{
       this.orcamento = orcamento;
    }
 
-   public void setGrandeAreaDeConhecimento(GrandeAreaDeConhecimento grandeAreaDeConhecimento){
-      this.grandeAreaDeConhecimento = grandeAreaDeConhecimento;
+   public void setAreaDeConhecimento(AreaDeConhecimento areaDeConhecimento){
+      this.areaDeConhecimento = areaDeConhecimento;
    }
 
    public void setDataResposta(Date dataResposta){
@@ -54,6 +55,10 @@ public class Projeto{
 
    public void setResposta(int resposta){
       this.resposta = resposta;
+   }
+   
+   public void setInstituicao(Instituicao instituicao){
+      this.instituicao = instituicao;
    }
 
    public int getId(){
@@ -72,8 +77,8 @@ public class Projeto{
       return this.orcamento;
    }
 
-   public GrandeAreaDeConhecimento getGrandeAreaDeConhecimento(){
-      return this.grandeAreaDeConhecimento;
+   public AreaDeConhecimento getAreaDeConhecimento(){
+      return this.areaDeConhecimento;
    }
 
    public Date getDataResposta(){
@@ -83,20 +88,22 @@ public class Projeto{
    public int getResposta(){
       return this.resposta;
    }
+   
+   public Instituicao getInstituicao(){
+      return this.instituicao;
+   }
     
    public boolean incluir(Connection conn){
       boolean result = false;
        
-      String sqlInsert = "INSERT INTO projetos( id, titulo, duracao, orcamento, grandeAreaDeConhecimento, dataResposta, resposta) VALUES (?,?,?,?,?,?,?)";
+      String sqlInsert = "INSERT INTO projetos(titulo, duracao, orcamento, areas_conhecimento_id, instituicao_id) VALUES (?,?,?,?,?)";
           
       try(PreparedStatement stm = conn.prepareStatement(sqlInsert);){
-         stm.setInt(1, getId());
-         stm.setString(2, getTitulo());
-         stm.setTime(3, getDuracao());
-         stm.setDouble(4, getOrcamento());
-         stm.setInt(5, getGrandeAreaDeConhecimento().getId());
-         stm.setDate(6, getDataResposta());
-         stm.setInt(7, getResposta());
+         stm.setString(1, getTitulo());
+         stm.setTime(2, getDuracao());
+         stm.setDouble(3, getOrcamento());
+         stm.setInt(4, getAreaDeConhecimento().getId());
+         stm.setInt(5, getInstituicao().getId());
          stm.execute();
          result = true;
       }catch (Exception e) {
@@ -114,21 +121,16 @@ public class Projeto{
    public boolean excluir(Connection conn){
       boolean result = false;
        
-      String sqlDelete = "DELETE FROM projetos WHERE id = ?";
+      String query = "DELETE FROM projetos WHERE id = ?";
        
-      try(PreparedStatement stm = conn.prepareStatement(sqlDelete);){
+      try{
+         PreparedStatement stm = conn.prepareStatement(query);
          stm.setInt(1, getId());
           
          stm.execute();  
          result = true;     
       }catch (Exception e) {
          e.printStackTrace();
-         try {
-            conn.rollback();
-         } 
-         catch (SQLException e1) {
-            System.out.print(e1.getStackTrace());
-         }
       } 
       return result;
    }
@@ -136,25 +138,22 @@ public class Projeto{
    public boolean atualizar(Connection conn){
       boolean result = false;
        
-      String sqlUpdate = "UPDATE projetos SET titulo = ?,duracao = ?,orcamento = ?,grandeAreaDeConhecimento = ? WHERE id = ?";
+      String query = "UPDATE projetos SET titulo = ?, duracao = ?, orcamento = ?, areas_conhecimento_id = ?, instituicao_id = ? WHERE id = ?";
        
-      try(PreparedStatement stm = conn.prepareStatement(sqlUpdate);){
+      try{
+         PreparedStatement stm = conn.prepareStatement(query);
+      
          stm.setString(1, getTitulo());
          stm.setTime(2, getDuracao());
          stm.setDouble(3, getOrcamento());
-         stm.setInt(4, getGrandeAreaDeConhecimento().getId());
-         stm.setInt(7, getId());
+         stm.setInt(4, getAreaDeConhecimento().getId());
+         stm.setInt(5, getInstituicao().getId());
+         stm.setInt(6, getId());
          stm.execute();
          
          result = true;
       }catch(Exception e) {
          e.printStackTrace();
-         try {
-            conn.rollback();
-         } 
-         catch (SQLException e1) {
-            System.out.print(e1.getStackTrace());
-         }
       } 
       return result;
    }
@@ -177,7 +176,7 @@ public class Projeto{
    }
     
    public Projeto select(Connection conn){
-      String sqlSelect = "SELECT id, titulo, duracao, orcamento, grandeAreaDeConhecimento, dataResposta, resposta FROM proejtos WHERE id = ?";
+      String sqlSelect = "SELECT id, titulo, duracao, orcamento, areas_conhecimento_id, data_resposta, resposta FROM projetos WHERE id = ?";
         
       try (PreparedStatement stm = conn.prepareStatement(sqlSelect);) {
          stm.setInt(1, getId());
@@ -187,9 +186,11 @@ public class Projeto{
                setTitulo(rs.getString("titulo"));
                setDuracao(rs.getTime("duracao"));
                setOrcamento(rs.getDouble("orcamento"));
-               setGrandeAreaDeConhecimento(new GrandeAreaDeConhecimento(rs.getInt("grandeAreaDeConhecimento")));
-               setDataResposta(rs.getDate("dataResposta"));
+               setAreaDeConhecimento(new AreaDeConhecimento(rs.getInt("areas_conhecimento_id")));
+               setDataResposta(rs.getDate("data_resposta"));
                setResposta(rs.getInt("resposta"));
+               
+               this.getAreaDeConhecimento().select(conn);
             }	
          }  catch (Exception e) {
             e.printStackTrace();
@@ -201,7 +202,7 @@ public class Projeto{
    }   
      
    public ArrayList<Projeto> getAll(Connection conn){
-      String query = "SELECT id, titulo, duracao, orcamento, grandeAreaDeConhecimento, dataResposta, resposta FROM proejtos WHERE id = ?";
+      String query = "SELECT id, titulo, duracao, orcamento, areas_conhecimento_id, data_resposta, resposta FROM projetos WHERE id = ?";
         
       ArrayList<Projeto> projetos = new ArrayList<>();
       try{
@@ -213,8 +214,8 @@ public class Projeto{
             projeto.setTitulo(rs.getString("titulo"));
             projeto.setDuracao(rs.getTime("duracao"));
             projeto.setOrcamento(rs.getDouble("orcamento"));
-            projeto.setGrandeAreaDeConhecimento(new GrandeAreaDeConhecimento(rs.getInt("grandeAreaDeConhecimento")));
-            projeto.setDataResposta(rs.getDate("dataResposta"));
+            projeto.setAreaDeConhecimento(new AreaDeConhecimento(rs.getInt("areas_conhecimento_id")));
+            projeto.setDataResposta(rs.getDate("data_resposta"));
             projeto.setResposta(rs.getInt("resposta"));
             projetos.add(projeto);
          }
@@ -234,7 +235,7 @@ public class Projeto{
          }
          resp += ", Resposta=" + res + ", Data da Resposta=" + this.dataResposta + "";
       }
-      resp += ", Grande Area de Conhecimento=" + this.grandeAreaDeConhecimento +"]";
+      resp += ", Area de Conhecimento=" + this.areaDeConhecimento +"]";
     
       return resp;
    }
