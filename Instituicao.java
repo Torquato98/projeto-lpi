@@ -99,7 +99,6 @@ public class Instituicao{
     
     public boolean delete(Connection conn){
         boolean result = false;
-        //Isso aqui é um comentário para teste
         String query = "DELETE FROM instituicao WHERE id = ?";
         try{
             PreparedStatement stmt = conn.prepareStatement(query);

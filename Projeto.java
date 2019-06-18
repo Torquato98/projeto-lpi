@@ -84,12 +84,10 @@ public class Projeto{
       return this.resposta;
    }
     
-   public boolean incluir (Connection conn){
-       
+   public boolean incluir(Connection conn){
       boolean result = false;
        
-      String sqlInsert = 
-         "INSERT INTO projetos( id, titulo, duracao, orcamento, grandeAreaDeConhecimento, dataResposta, resposta) VALUES (?,?,?,?,?,?,?)";
+      String sqlInsert = "INSERT INTO projetos( id, titulo, duracao, orcamento, grandeAreaDeConhecimento, dataResposta, resposta) VALUES (?,?,?,?,?,?,?)";
           
       try(PreparedStatement stm = conn.prepareStatement(sqlInsert);){
          stm.setInt(1, getId());
@@ -100,8 +98,8 @@ public class Projeto{
          stm.setDate(6, getDataResposta());
          stm.setInt(7, getResposta());
          stm.execute();
-      }
-      catch (Exception e) {
+         result = true;
+      }catch (Exception e) {
          e.printStackTrace();
          try {
             conn.rollback();
@@ -113,7 +111,7 @@ public class Projeto{
       return result;
    }
     
-   public boolean excluir (Connection conn){
+   public boolean excluir(Connection conn){
       boolean result = false;
        
       String sqlDelete = "DELETE FROM projetos WHERE id = ?";
@@ -121,9 +119,9 @@ public class Projeto{
       try(PreparedStatement stm = conn.prepareStatement(sqlDelete);){
          stm.setInt(1, getId());
           
-         stm.execute();       
-      }
-      catch (Exception e) {
+         stm.execute();  
+         result = true;     
+      }catch (Exception e) {
          e.printStackTrace();
          try {
             conn.rollback();
@@ -135,22 +133,21 @@ public class Projeto{
       return result;
    }
     
-   public boolean atualizar (Connection conn){
+   public boolean atualizar(Connection conn){
       boolean result = false;
        
-      String sqlUpdate = "UPDATE projetos SET titulo =?,duracao =?, orcamento =? ,grandeAreaDeConhecimento =?, dataResposta =?,resposta =?) WHERE id =?";
+      String sqlUpdate = "UPDATE projetos SET titulo = ?,duracao = ?,orcamento = ?,grandeAreaDeConhecimento = ? WHERE id = ?";
        
       try(PreparedStatement stm = conn.prepareStatement(sqlUpdate);){
          stm.setString(1, getTitulo());
          stm.setTime(2, getDuracao());
          stm.setDouble(3, getOrcamento());
          stm.setInt(4, getGrandeAreaDeConhecimento().getId());
-         stm.setDate(5, getDataResposta());
-         stm.setInt(6, getResposta());
          stm.setInt(7, getId());
          stm.execute();
-      }
-      catch(Exception e) {
+         
+         result = true;
+      }catch(Exception e) {
          e.printStackTrace();
          try {
             conn.rollback();
@@ -159,6 +156,23 @@ public class Projeto{
             System.out.print(e1.getStackTrace());
          }
       } 
+      return result;
+   }
+   
+   public boolean updateAnswer(Connection conn){
+      boolean result = false;
+      String query = "UPDATE projetos SET resposta = ?, data_resposta = ? WHERE id = ?";
+      try{
+         PreparedStatement stmt = conn.prepareStatement(query);
+         stmt.setInt(0, getResposta());
+         stmt.setDate(1, getDataResposta());
+         stmt.setInt(2, getId());
+         stmt.execute();
+         
+         result = true;
+      }catch(Exception e){
+         e.printStackTrace();
+      }
       return result;
    }
     
@@ -184,10 +198,7 @@ public class Projeto{
          System.out.print(e1.getStackTrace());
       }
       return this;
-   }
-      
-      
-            
+   }   
      
    public ArrayList<Projeto> getAll(Connection conn){
       String query = "SELECT id, titulo, duracao, orcamento, grandeAreaDeConhecimento, dataResposta, resposta FROM proejtos WHERE id = ?";
@@ -212,6 +223,7 @@ public class Projeto{
       }
       return projetos;
    }    
+   
    @Override
     public String toString(){
       String resp = "Projeto[ID=" + this.id + ", Titulo=" + this.titulo + ", Duracao=" + this.duracao + ", Orcamento=" + this.orcamento;
