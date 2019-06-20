@@ -112,8 +112,10 @@ public class Tela extends JFrame implements ActionListener,ListSelectionListener
       }
    }
    public String[][] carregaDados(Connection conn){
+   
+      Projeto p = new Projeto();
       
-      ArrayList<Projeto> lista = listar(conn);
+      ArrayList<Projeto> lista = p.getAll(conn);
 
       DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
       
@@ -124,8 +126,8 @@ public class Tela extends JFrame implements ActionListener,ListSelectionListener
          
          saida[i][0] = projeto.getId()+"";
          saida[i][1] = projeto.getTitulo();
-         saida[i][2] = listarArea(conn,projeto.getAreaDeConhecimento());
-         saida[i][3] = projeto.getDuracao();
+         saida[i][2] = projeto.getAreaDeConhecimento().toString();
+         saida[i][3] = projeto.getDuracao().getTime() + "";
          //formata o numero com 2 casas decimais
          saida[i][4] = String.format("%.2f", projeto.getOrcamento());
          
@@ -145,56 +147,7 @@ public class Tela extends JFrame implements ActionListener,ListSelectionListener
       rolagem.setPreferredSize(new Dimension(LARGURA_SCROLL_PANE, 
                               ALTURA_SCROLL_PANE));
    }
-   public ArrayList<Projeto> listar(Connection conn){
-      String query = "SELECT * FROM projetos";
-      ArrayList<Projeto> p = new ArrayList<Projeto>();
-      
-      try (PreparedStatement stm = conn.prepareStatement(query);){
-            
-         ResultSet rs = stm.executeQuery();
-               
-         while(rs.next()){
-            Projeto pro = new Projeto();
-            pro.setId(rs.getInt("id"));
-            pro.setTitulo(rs.getString("titulo"));
-            pro.setDuracao(rs.getString("duracao"));
-            pro.setOrcamento(rs.getDouble("orcamento"));
-               
-            pro.setAreaDeConhecimento(rs.getInt("areas_conhecimento_id"));
-            p.add(pro);
-         }
-         
-      
-      }catch(Exception e){
-         e.printStackTrace();
-      }
-         
-      return p;
-   }
-   public String listarArea(Connection conn, int id){
-      String query = "SELECT nome FROM areas_conhecimento  WHERE id = ?";
-      String area = "";
-      
-      try (PreparedStatement stm = conn.prepareStatement(query);) {
-         stm.setInt(1, id);
-         try (ResultSet rs = stm.executeQuery();) {
-               
-            while(rs.next()){
-               area = rs.getString("nome");
-              
-            
-            }
-         
-         }catch(Exception e){
-            e.printStackTrace();
-         }
-      }catch (SQLException e1) {
-         System.out.print(e1.getStackTrace()+e1.getMessage());
-      
-      }
-         
-      return area;
-   }
+   
    public void excluirProjeto(Connection conn,String id) {
       String query = 
          "DELETE FROM projetos WHERE id = ?";

@@ -92,6 +92,19 @@ public class Projeto{
    public Instituicao getInstituicao(){
       return this.instituicao;
    }
+   
+   private void getLastIdInserted(Connection conn){
+      try{
+         String query2 = "SELECT LAST_INSERT_ID()";
+         PreparedStatement stmt2 = conn.prepareStatement(query2);
+         ResultSet rs = stmt2.executeQuery();
+         if(rs.next()){
+            this.setId(rs.getInt(1));
+         }
+      }catch(Exception e){
+         e.printStackTrace();
+      }
+   }
     
    public boolean incluir(Connection conn){
       boolean result = false;
@@ -105,15 +118,11 @@ public class Projeto{
          stm.setInt(4, getAreaDeConhecimento().getId());
          stm.setInt(5, getInstituicao().getId());
          stm.execute();
+         
+         this.getLastIdInserted(conn);
          result = true;
       }catch (Exception e) {
          e.printStackTrace();
-         try {
-            conn.rollback();
-         } 
-         catch (SQLException e1) {
-            System.out.print(e1.getStackTrace());
-         }
       } 
       return result;
    }
@@ -202,7 +211,7 @@ public class Projeto{
    }   
      
    public ArrayList<Projeto> getAll(Connection conn){
-      String query = "SELECT id, titulo, duracao, orcamento, areas_conhecimento_id, data_resposta, resposta FROM projetos WHERE id = ?";
+      String query = "SELECT id, titulo, duracao, orcamento, areas_conhecimento_id, data_resposta, resposta FROM projetos";
         
       ArrayList<Projeto> projetos = new ArrayList<>();
       try{
@@ -217,6 +226,8 @@ public class Projeto{
             projeto.setAreaDeConhecimento(new AreaDeConhecimento(rs.getInt("areas_conhecimento_id")));
             projeto.setDataResposta(rs.getDate("data_resposta"));
             projeto.setResposta(rs.getInt("resposta"));
+            
+            projeto.getAreaDeConhecimento().select(conn);
             projetos.add(projeto);
          }
       }catch(Exception e){
