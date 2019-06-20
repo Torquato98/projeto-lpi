@@ -10,24 +10,28 @@ public class Projeto{
 
    private int id;
    private String titulo;
-   private Time duracao;
+   private String duracao;
    private double orcamento;
    private AreaDeConhecimento areaDeConhecimento;
    private Date dataResposta;
    private int resposta = -1;
+   private Pesquisador pesquisador;
    private Instituicao instituicao;
+   private Avaliador avaliador;
 
    public Projeto(){
     
    }
 
-   public Projeto(int id, String titulo, Time duracao, double orcamento, AreaDeConhecimento areaDeConhecimento, Date dataDeResposta, int resposta){
+   public Projeto(int id, String titulo, String duracao, double orcamento, AreaDeConhecimento areaDeConhecimento, Date dataDeResposta, int resposta, Avaliador avaliador, Pesquisador pesquisador){
       this.id = id;
       this.titulo = titulo;
       this.duracao = duracao;
       this.orcamento = orcamento;
       this.areaDeConhecimento = areaDeConhecimento;
-   }
+      this.avaliador = avaliador;
+      this.pesquisador = pesquisador;
+   }  
 
    public void setId(int id){
       this.id = id;
@@ -37,7 +41,7 @@ public class Projeto{
       this.titulo = titulo;
    }
 
-   public void setDuracao(Time duracao){
+   public void setDuracao(String duracao){
       this.duracao = duracao;
    }
 
@@ -60,6 +64,14 @@ public class Projeto{
    public void setInstituicao(Instituicao instituicao){
       this.instituicao = instituicao;
    }
+   
+   public void setAvaliador(Avaliador avaliador){
+      this.avaliador = avaliador;
+   }
+   
+   public void setPesquisador(Pesquisador pesquisador){
+      this.pesquisador = pesquisador;
+   }
 
    public int getId(){
       return this.id;
@@ -69,7 +81,7 @@ public class Projeto{
       return this.titulo;
    }
 
-   public Time getDuracao(){
+   public String getDuracao(){
       return this.duracao;
    }
 
@@ -93,6 +105,14 @@ public class Projeto{
       return this.instituicao;
    }
    
+   public Avaliador getAvaliador(){
+      return this.avaliador;
+   } 
+   
+   public Pesquisador getPesquisador(){
+      return pesquisador;
+   }
+   
    private void getLastIdInserted(Connection conn){
       try{
          String query2 = "SELECT LAST_INSERT_ID()";
@@ -106,17 +126,19 @@ public class Projeto{
       }
    }
     
-   public boolean incluir(Connection conn){
+   public boolean insert(Connection conn){
       boolean result = false;
        
-      String sqlInsert = "INSERT INTO projetos(titulo, duracao, orcamento, areas_conhecimento_id, instituicao_id) VALUES (?,?,?,?,?)";
+      String sqlInsert = "INSERT INTO projetos(titulo, duracao, orcamento, areas_conhecimento_id, instituicao_id, avaliador_id, pesquisador_id) VALUES (?,?,?,?,?,?,?)";
           
       try(PreparedStatement stm = conn.prepareStatement(sqlInsert);){
          stm.setString(1, getTitulo());
-         stm.setTime(2, getDuracao());
+         stm.setString(2, getDuracao());
          stm.setDouble(3, getOrcamento());
          stm.setInt(4, getAreaDeConhecimento().getId());
          stm.setInt(5, getInstituicao().getId());
+         stm.setInt(6, getAvaliador().getId());
+         stm.setInt(7, getPesquisador().getId());
          stm.execute();
          
          this.getLastIdInserted(conn);
@@ -127,7 +149,7 @@ public class Projeto{
       return result;
    }
     
-   public boolean excluir(Connection conn){
+   public boolean remove(Connection conn){
       boolean result = false;
        
       String query = "DELETE FROM projetos WHERE id = ?";
@@ -144,20 +166,22 @@ public class Projeto{
       return result;
    }
     
-   public boolean atualizar(Connection conn){
+   public boolean update(Connection conn){
       boolean result = false;
        
-      String query = "UPDATE projetos SET titulo = ?, duracao = ?, orcamento = ?, areas_conhecimento_id = ?, instituicao_id = ? WHERE id = ?";
+      String query = "UPDATE projetos SET titulo = ?, duracao = ?, orcamento = ?, areas_conhecimento_id = ?, instituicao_id = ?, avaliador_id = ?, pesquisador_id = ? WHERE id = ?";
        
       try{
          PreparedStatement stm = conn.prepareStatement(query);
       
          stm.setString(1, getTitulo());
-         stm.setTime(2, getDuracao());
+         stm.setString(2, getDuracao());
          stm.setDouble(3, getOrcamento());
          stm.setInt(4, getAreaDeConhecimento().getId());
          stm.setInt(5, getInstituicao().getId());
-         stm.setInt(6, getId());
+         stm.setInt(6, getAvaliador().getId());
+         stm.setInt(7, getPesquisador().getId());
+         stm.setInt(8, getId());
          stm.execute();
          
          result = true;
@@ -172,9 +196,9 @@ public class Projeto{
       String query = "UPDATE projetos SET resposta = ?, data_resposta = ? WHERE id = ?";
       try{
          PreparedStatement stmt = conn.prepareStatement(query);
-         stmt.setInt(0, getResposta());
-         stmt.setDate(1, getDataResposta());
-         stmt.setInt(2, getId());
+         stmt.setInt(1, getResposta());
+         stmt.setDate(2, getDataResposta());
+         stmt.setInt(3, getId());
          stmt.execute();
          
          result = true;
@@ -185,7 +209,7 @@ public class Projeto{
    }
     
    public Projeto select(Connection conn){
-      String sqlSelect = "SELECT id, titulo, duracao, orcamento, areas_conhecimento_id, data_resposta, resposta FROM projetos WHERE id = ?";
+      String sqlSelect = "SELECT id, titulo, duracao, orcamento, areas_conhecimento_id, data_resposta, resposta, pesquisador_id, instituicao_id, avaliador_id FROM projetos WHERE id = ?";
         
       try (PreparedStatement stm = conn.prepareStatement(sqlSelect);) {
          stm.setInt(1, getId());
@@ -193,13 +217,19 @@ public class Projeto{
          
             if (rs.next()) {
                setTitulo(rs.getString("titulo"));
-               setDuracao(rs.getTime("duracao"));
+               setDuracao(rs.getString("duracao"));
                setOrcamento(rs.getDouble("orcamento"));
                setAreaDeConhecimento(new AreaDeConhecimento(rs.getInt("areas_conhecimento_id")));
                setDataResposta(rs.getDate("data_resposta"));
                setResposta(rs.getInt("resposta"));
+               setPesquisador(new Pesquisador(rs.getInt("pesquisador_id")));
+               setInstituicao(new Instituicao(rs.getInt("instituicao_id")));
+               setAvaliador(new Avaliador(rs.getInt("avaliador_id")));
                
                this.getAreaDeConhecimento().select(conn);
+               this.getPesquisador().select(conn);
+               this.getInstituicao().select(conn);
+               this.getAvaliador().select(conn);
             }	
          }  catch (Exception e) {
             e.printStackTrace();
@@ -211,7 +241,7 @@ public class Projeto{
    }   
      
    public ArrayList<Projeto> getAll(Connection conn){
-      String query = "SELECT id, titulo, duracao, orcamento, areas_conhecimento_id, data_resposta, resposta FROM projetos";
+      String query = "SELECT id, titulo, duracao, orcamento, areas_conhecimento_id, data_resposta, resposta, pesquisador_id, instituicao_id, avaliador_id FROM projetos";
         
       ArrayList<Projeto> projetos = new ArrayList<>();
       try{
@@ -221,13 +251,19 @@ public class Projeto{
             Projeto projeto = new Projeto();
             projeto.setId(rs.getInt("id"));
             projeto.setTitulo(rs.getString("titulo"));
-            projeto.setDuracao(rs.getTime("duracao"));
+            projeto.setDuracao(rs.getString("duracao"));
             projeto.setOrcamento(rs.getDouble("orcamento"));
             projeto.setAreaDeConhecimento(new AreaDeConhecimento(rs.getInt("areas_conhecimento_id")));
             projeto.setDataResposta(rs.getDate("data_resposta"));
             projeto.setResposta(rs.getInt("resposta"));
+            projeto.setPesquisador(new Pesquisador(rs.getInt("pesquisador_id")));
+            projeto.setInstituicao(new Instituicao(rs.getInt("instituicao_id")));
+            projeto.setAvaliador(new Avaliador(rs.getInt("avaliador_id")));
             
             projeto.getAreaDeConhecimento().select(conn);
+            projeto.getPesquisador().select(conn);
+            projeto.getInstituicao().select(conn);
+            projeto.getAvaliador().select(conn);
             projetos.add(projeto);
          }
       }catch(Exception e){
