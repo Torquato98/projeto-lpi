@@ -57,7 +57,7 @@ public class AreaDeConhecimento{
          String query = "SELECT id, nome, grandes_areas_conhecimento_id FROM areas_conhecimento WHERE id = ?";
          try{
                PreparedStatement stmt = conn.prepareStatement(query);
-               stmt.setInt(0, this.getId());
+               stmt.setInt(1, getId());
                ResultSet rs = stmt.executeQuery();
                
                if(rs.next()){
