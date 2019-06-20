@@ -114,4 +114,26 @@ public class AreaPesquisa{
       return this;
    }
 
+   public ArrayList<AreaPesquisa> getAll(Connection conn){
+      ArrayList<AreaPesquisa> list = new ArrayList<>();
+      String query = "SELECT nome, areas_conhecimento_id FROM areas_pesquisa";
+      try{
+         PreparedStatement stmt = conn.prepareStatement(query);
+         ResultSet rs = stmt.executeQuery();
+         while(rs.next()){
+            AreaPesquisa areaPesquisa = new AreaPesquisa();
+            areaPesquisa.setId(rs.getInt("id"));
+            areaPesquisa.setNome(rs.getString("nome"));
+            areaPesquisa.setAreaConhecimento(new AreaConhecimento(rs.getInt("areas_conhecimento_id")));
+
+            areaPesquisa.getAreaConhecimento().select(conn);
+            list.add(areaPesquisa);
+         }
+      }catch(Exception e){
+         e.printStackTrace();
+      }
+
+      return list;
+   }
+
 }
