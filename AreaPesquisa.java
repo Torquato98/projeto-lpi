@@ -21,7 +21,7 @@ public class AreaPesquisa{
    public AreaPesquisa(int id, String nome, AreaDeConhecimento areaDeConhecimento){
       this.id = id;
       this.nome = nome;
-      this.areaConhecimento = areaDeConhecimento;
+      this.areaDeConhecimento = areaDeConhecimento;
    }
    
    public void setId(int id){
@@ -32,8 +32,8 @@ public class AreaPesquisa{
       this.nome = nome;
    }
    
-   public void setAreaConhecimento(AreaConhecimento areaDeConhecimento){
-      this.areaConhecimento = areaDeConhecimento;
+   public void setAreaDeConhecimento(AreaDeConhecimento areaDeConhecimento){
+      this.areaDeConhecimento = areaDeConhecimento;
    }
    
    public int getId(){
@@ -44,8 +44,8 @@ public class AreaPesquisa{
       return nome;
    }
    
-   public AreaConhecimento getAreaConhecimento(){
-      return areaConhecimento;
+   public AreaDeConhecimento getAreaDeConhecimento(){
+      return areaDeConhecimento;
    }
    
    private void getLastIdInserted(Connection conn){
@@ -67,7 +67,7 @@ public class AreaPesquisa{
       try{
          PreparedStatement stmt = conn.prepareStatement(query);
          stmt.setString(1, getNome());
-         stmt.setInt(2, getAreaConhecimento().getId());
+         stmt.setInt(2, getAreaDeConhecimento().getId());
          stmt.execute();
          
          this.getLastIdInserted(conn);
@@ -85,7 +85,7 @@ public class AreaPesquisa{
       try{
          PreparedStatement stmt = conn.prepareStatement(query);
          stmt.setString(1, getNome());
-         stmt.setInt(2, getAreaConhecimento().getId());
+         stmt.setInt(2, getAreaDeConhecimento().getId());
          stmt.setInt(3, getId());
          stmt.execute();
          
@@ -104,9 +104,9 @@ public class AreaPesquisa{
          ResultSet rs = stmt.executeQuery();
          if(rs.next()){
             this.setNome(rs.getString("nome"));
-            this.setAreaConhecimento(new AreaConhecimento(rs.getInt("areas_conhecimento_id")));
+            this.setAreaDeConhecimento(new AreaDeConhecimento(rs.getInt("areas_conhecimento_id")));
             
-            this.getAreaConhecimento().select(conn);
+            this.getAreaDeConhecimento().select(conn);
          }
       }catch(Exception e){
          e.printStackTrace();
@@ -124,9 +124,9 @@ public class AreaPesquisa{
             AreaPesquisa areaPesquisa = new AreaPesquisa();
             areaPesquisa.setId(rs.getInt("id"));
             areaPesquisa.setNome(rs.getString("nome"));
-            areaPesquisa.setAreaConhecimento(new AreaConhecimento(rs.getInt("areas_conhecimento_id")));
+            areaPesquisa.setAreaDeConhecimento(new AreaDeConhecimento(rs.getInt("areas_conhecimento_id")));
 
-            areaPesquisa.getAreaConhecimento().select(conn);
+            areaPesquisa.getAreaDeConhecimento().select(conn);
             list.add(areaPesquisa);
          }
       }catch(Exception e){
