@@ -16,9 +16,9 @@ public class ConexaoBD {
    public static Connection conectar() throws SQLException {
       String servidor = "localhost";
       String porta = "3306";
-      String database = "tutorial";
-      String usuario = "Alunos";
-      String senha = "alunos";
+      String database = "projetolpi";
+      String usuario = "root";
+      String senha = "";
       return DriverManager
          	.getConnection("jdbc:mysql://"+servidor+":"+porta+
             "/"+database+"?user="+usuario+"&password="+senha);

@@ -1,14 +1,15 @@
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Instituicao{
 
     private int id;
     private String nome;
-
+    private  ArrayList<Instituicao> instituicoes;
+    
     public Instituicao(){
 
     }
@@ -22,6 +23,10 @@ public class Instituicao{
         this.nome = nome;
     }
 
+    public void setInstituicoes (ArrayList<Instituicao> instituicoes){
+      this.instituicoes = instituicoes;
+    }
+    
     public void setId(int id){
         this.id = id;
     }
@@ -30,6 +35,10 @@ public class Instituicao{
         this.nome = nome;
     }
 
+    public ArrayList<Instituicao> getInstituicoes (){
+      return instituicoes; 
+    }
+    
     public int getId(){
         return this.id;
     }
@@ -105,6 +114,7 @@ public class Instituicao{
     
     public boolean delete(Connection conn){
         boolean result = false;
+        //Isso aqui é um comentário para teste
         String query = "DELETE FROM instituicao WHERE id = ?";
         try{
             PreparedStatement stmt = conn.prepareStatement(query);
