@@ -31,7 +31,7 @@ public class GrauConhecimento{
       this.nome = nome;
    }
   
-   public boolean  incluir (Connection conn){
+   public boolean  incluir(Connection conn){
       boolean result = false;
       String query = "INSERT INTO grau_conhecimento (id, nome) VALUES (?,?) ";
       try {PreparedStatement stm = conn.prepareStatement(query);
@@ -46,7 +46,7 @@ public class GrauConhecimento{
       return result;
    }
     
-   public boolean excluir (Connection conn){
+   public boolean excluir(Connection conn){
       boolean result = false;
       String query = "DELETE FROM grau_conhecimento WHERE id = ?";
       try{PreparedStatement stm = conn.prepareStatement(query);
@@ -59,7 +59,7 @@ public class GrauConhecimento{
       }
       return result;
    }
-   public boolean atualizar (Connection conn){
+   public boolean atualizar(Connection conn){
       boolean result = false;
       String query = "UPDATE grau_conhecimento SET nome = ? WHERE id = ? ";
       try{PreparedStatement stm = conn.prepareStatement(query);
@@ -75,7 +75,7 @@ public class GrauConhecimento{
       return result;
    }
 
-   public GrauConhecimento carregar (Connection conn){
+   public GrauConhecimento carregar(Connection conn){
       String query = "SELECT id, nome FROM grau_conhecimento WHERE id = ?";
       try{PreparedStatement stm = conn.prepareStatement(query);
          stm.setInt(1, getId());
