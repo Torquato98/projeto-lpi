@@ -98,6 +98,19 @@ public class Pesquisador{
       return grauConhecimento;
    }
    
+   private void getLastIdInserted(Connection conn){
+      try{
+         String query2 = "SELECT LAST_INSERT_ID()";
+         PreparedStatement stmt2 = conn.prepareStatement(query2);
+         ResultSet rs = stmt2.executeQuery();
+         if(rs.next()){
+            this.setId(rs.getInt(1));
+         }
+      }catch(Exception e){
+         e.printStackTrace();
+      }
+   }
+   
    public boolean insert(Connection conn){
       boolean result = false;
       String query = "INSERT INTO pesquisador(rg, cpf, nome, sexo, data_nasc, instituicao_id) VALUES(?,?,?,?,?,?)";
@@ -110,6 +123,8 @@ public class Pesquisador{
          stmt.setDate(5, getDataNasc());
          stmt.setInt(6, getInstituicao().getId());
          stmt.execute();
+         
+         this.getLastIdInserted(conn);
          
          result = true;
       }catch(Exception e){

@@ -126,8 +126,8 @@ public class Tela extends JFrame implements ActionListener,ListSelectionListener
          
          saida[i][0] = projeto.getId()+"";
          saida[i][1] = projeto.getTitulo();
-         saida[i][2] = projeto.getAreaDeConhecimento().toString();
-         saida[i][3] = projeto.getDuracao().getTime() + "";
+         saida[i][2] = projeto.getAreaDeConhecimento().getNome();
+         saida[i][3] = projeto.getDuracao();
          //formata o numero com 2 casas decimais
          saida[i][4] = String.format("%.2f", projeto.getOrcamento());
          

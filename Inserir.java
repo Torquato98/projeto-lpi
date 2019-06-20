@@ -96,6 +96,11 @@ public class Inserir extends JFrame implements ActionListener  {
    }
    
    public void actionPerformed (ActionEvent e){
+      //Pegando dados do combobox
+      int avaliador = Integer.parseInt(String.valueOf(cbI.getSelectedItem()).split(" - ")[0]);
+      int instituicao = Integer.parseInt(String.valueOf(cbP.getSelectedItem()).split(" - ")[0]);
+      int area_conhecimento = Integer.parseInt(String.valueOf(cbA.getSelectedItem()).split(" - ")[0]);
+   
       if(e.getSource()==btnVoltar){
          dispose();
          ConexaoBD bd = new ConexaoBD();
@@ -108,20 +113,18 @@ public class Inserir extends JFrame implements ActionListener  {
          }
       }
       else if (e.getSource()==btnInserir){
+         Projeto projeto = new Projeto();
+         projeto.setTitulo(txtTitulo.getText());
+         projeto.setDuracao(txtDuracao.getText());
+         projeto.setOrcamento(Double.parseDouble(txtOrcamento.getText()));
+         projeto.setInstituicao(new Instituicao(instituicao));
+         projeto.setAvaliador(new Avaliador(avaliador));
+         projeto.setAreaDeConhecimento(new AreaDeConhecimento(area_conhecimento));
+         projeto.insert(this.conn);
          
-         inserir();
-         JOptionPane.showMessageDialog(null,"Projeto Cadastrado!!");
-         dispose();
-         ConexaoBD bd = new ConexaoBD();
-         try{
-            Connection conn = bd.conectar();
-            new Tela(conn);
-         } 
-         catch (SQLException v){
-            v.printStackTrace();
-         }
+         JOptionPane.showMessageDialog(null, "Projeto cadastrado com sucesso");
       }
-      else if(e.getSource()==cbGa){
+      else if(e.getSource() == cbGa){
          String dados[] = String.valueOf(cbGa.getSelectedItem()).split(" - ");
          if(!dados[0].equalsIgnoreCase("Escolha")){
             cbA.removeAllItems();
@@ -203,7 +206,7 @@ public class Inserir extends JFrame implements ActionListener  {
          
    }
    public void listarPesquisador(String id){
-      String query = "SELECT id,nome FROM pesquisadores  WHERE instituicao_id = ? ";  
+      String query = "SELECT id,nome FROM pesquisadores WHERE instituicao_id = ? ";  
       try (PreparedStatement stm = conn.prepareStatement(query);) {
          stm.setInt(1, Integer.parseInt(id));
          try (ResultSet rs = stm.executeQuery();) {
@@ -220,33 +223,6 @@ public class Inserir extends JFrame implements ActionListener  {
       
       }
          
-   }
-   public void inserir(){
-      String sqlInsert = 
-         "INSERT INTO projetos(titulo, duracao, orcamento,data_envio,data_resposta, resposta, pesquisadores_id, instituicao_id, avaliadores_id,areas_conhecimento_id) VALUES (?, ?, ?, ?, null, null, ?, ?,null,?)";
-      guarda = String.valueOf(cbI.getSelectedItem()).split(" - ");
-      guarda2 = String.valueOf(cbP.getSelectedItem()).split(" - ");
-      guarda3 = String.valueOf(cbA.getSelectedItem()).split(" - ");
-      try (PreparedStatement stm = conn.prepareStatement(sqlInsert);) {
-         stm.setString(1, txtTitulo.getText());
-         stm.setString(2, txtDuracao.getText());
-         stm.setString(3,txtOrcamento.getText());
-         stm.setDate(4,data);
-         
-         GrandeAreaDeConhecimento g = new GrandeAreaDeConhecimento();
-         stm.setInt(5, Integer.parseInt(guarda2[0]));
-         stm.setInt(6, Integer.parseInt(guarda[0]));
-         stm.setInt(7, Integer.parseInt(guarda3[0]));
-         stm.execute();
-      
-      } catch (Exception e) {
-         e.printStackTrace(); e.getMessage();
-         try {
-            conn.rollback();
-         } catch (SQLException e1) {
-            System.out.print(e1.getStackTrace() +e1.getMessage());
-         }
-      }
    }
 
 }
