@@ -18,7 +18,7 @@ public class Tela extends JFrame implements ActionListener,ListSelectionListener
    final int ALTURA_TELA = 300;
    final int LARGURA_SCROLL_PANE = LARGURA_TELA - 200;
    final int ALTURA_SCROLL_PANE = ALTURA_TELA - 110;
-   private String[] colunas = {"ID", "Titulo", "¡rea de Conhecimento", "DuraÁ„o","OrÁamento"};
+   private String[] colunas = {"ID", "Titulo", "√Årea de Conhecimento", "Dura√ß√£o","Or√ßamento"};
    private Object[][] projetos;
    
    
@@ -77,7 +77,7 @@ public class Tela extends JFrame implements ActionListener,ListSelectionListener
          Alterar a = new Alterar(conn,tabelaProjetos.getValueAt(tabelaProjetos.getSelectedRow(),0)+"");
       }
       else if(e.getSource()==btnExcluir){
-         int i = JOptionPane.showOptionDialog(null, "Tem certeza que deseja excluir o projeto "+tabelaProjetos.getValueAt(tabelaProjetos.getSelectedRow(),1)+"?", "ATEN«√O",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,null,null,null); 
+         int i = JOptionPane.showOptionDialog(null, "Tem certeza que deseja excluir o projeto "+tabelaProjetos.getValueAt(tabelaProjetos.getSelectedRow(),1)+"?", "ATEN√á√ÉO",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,null,null,null); 
          if (i == JOptionPane.YES_OPTION) { 
             excluirProjeto(conn,tabelaProjetos.getValueAt(tabelaProjetos.getSelectedRow(),0)+"");
             JOptionPane.showMessageDialog(null,"Projeto excluido com sucesso!!");
@@ -146,26 +146,5 @@ public class Tela extends JFrame implements ActionListener,ListSelectionListener
       rolagem = new JScrollPane(tabelaProjetos);
       rolagem.setPreferredSize(new Dimension(LARGURA_SCROLL_PANE, 
                               ALTURA_SCROLL_PANE));
-   }
-   
-   public void excluirProjeto(Connection conn,String id) {
-      String query = 
-         "DELETE FROM projetos WHERE id = ?";
-   
-      try (PreparedStatement stm = conn.prepareStatement(query);) {
-      
-         stm.setInt(1,Integer.parseInt(id));
-      
-         stm.execute();
-      } catch (Exception e) {
-         e.printStackTrace();
-         try {
-            conn.rollback();
-         } catch (SQLException e1) {
-            System.out.print(e1.getStackTrace());
-         }
-      }
-   }
-   
-   
+   }   
 }

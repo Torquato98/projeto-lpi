@@ -22,12 +22,11 @@ public class Alterar extends JFrame implements ActionListener  {
       this.id = id;
       
       lblTitulo = new JLabel ("Titulo");
-      lblDuracao = new JLabel ("Duração");
-      lblOrcamento = new JLabel ("Orçamento");
-      lblAlterar = new JLabel("Alteração");
-
+      lblDuracao = new JLabel ("DuraÃ§Ã£o");
+      lblOrcamento = new JLabel ("OrÃ§amento");
+      lblAlterar = new JLabel("AlteraÃ§Ã£o");
       lblPesquisador = new JLabel("Pesquisador");
-      lblInstituicao = new JLabel("Instituição");
+      lblInstituicao = new JLabel("InstituiÃ§Ã£o");
       
       txtTitulo = new JTextField(20);
       txtDuracao = new JTextField(10);
@@ -37,8 +36,6 @@ public class Alterar extends JFrame implements ActionListener  {
       
       btnAlterar = new JButton("Alterar");
       btnVoltar = new JButton("Voltar");
-      
-
       
       Container cx = getContentPane();
       cx.setLayout(new BorderLayout());
@@ -100,7 +97,11 @@ public class Alterar extends JFrame implements ActionListener  {
          
       }
       else if(e.getSource()==btnAlterar){
-         alterar(id);
+         Projeto projeto = new Projeto();
+         projeto.setTitulo(txtTitulo.getText());
+         projeto.setDuracao(txtDuracao.getText());
+         projeto.setOrcamento(Double.parseDouble(txtOrcamento.getText()));
+         
          JOptionPane.showMessageDialog(null,"Projeto alterado com sucesso!!");
          dispose();
          ConexaoBD bd = new ConexaoBD();
@@ -112,91 +113,6 @@ public class Alterar extends JFrame implements ActionListener  {
             m.printStackTrace();
          }
       }
-        }
+   }
 
-   public void preencher(String id){
-      String query = "SELECT * FROM projetos WHERE id = ? ";
-      
-      try (PreparedStatement stm = conn.prepareStatement(query);) {
-         stm.setInt(1, Integer.parseInt(id));
-         try (ResultSet rs = stm.executeQuery();) {
-               
-            while(rs.next()){
-               txtTitulo.setText(rs.getString("titulo"));
-               txtDuracao.setText(rs.getString("duracao"));
-               txtOrcamento.setText(rs.getString("orcamento"));
-               listarPesquisador(rs.getString("pesquisadores_id"));
-               listarInstituicao(rs.getString("instituicao_id"));
-            }
-         
-         }catch(Exception e){
-            e.printStackTrace();
-         }
-      }catch (SQLException e1) {
-         System.out.print(e1.getStackTrace()+e1.getMessage());
-      
-      }
-   
-   }
-   public void listarPesquisador(String id){
-      String query = "SELECT id,nome FROM pesquisadores  WHERE id = ? ";  
-      try (PreparedStatement stm = conn.prepareStatement(query);) {
-         stm.setInt(1, Integer.parseInt(id));
-         try (ResultSet rs = stm.executeQuery();) {
-               
-            while(rs.next()){
-               txtPesquisador.setText(String.valueOf(rs.getInt("id"))+ " - " +(rs.getString("nome")));
-            }
-         
-         }catch(Exception e){
-            e.printStackTrace();
-         }
-      }catch (SQLException e1) {
-         System.out.print(e1.getStackTrace()+e1.getMessage());
-      
-      }
-         
-   }
-   public void listarInstituicao(String id){
-      String query = "SELECT id,nome FROM instituicao  WHERE id = ? ";  
-      try (PreparedStatement stm = conn.prepareStatement(query);) {
-         stm.setInt(1, Integer.parseInt(id));
-         try (ResultSet rs = stm.executeQuery();) {
-               
-            while(rs.next()){
-               txtInstituicao.setText(String.valueOf(rs.getInt("id"))+ " - " +(rs.getString("nome")));
-            }
-         
-         }catch(Exception e){
-            e.printStackTrace();
-         }
-      }catch (SQLException e1) {
-         System.out.print(e1.getStackTrace()+e1.getMessage());
-      
-      }
-         
-   }
-   public void alterar(String id) {
-      String sqlUpdate = 
-         "UPDATE projetos SET titulo=?, duracao=?, orcamento=? WHERE id = ?";
-   
-      try (PreparedStatement stm = conn.prepareStatement(sqlUpdate);) {
-         stm.setString(1, txtTitulo.getText());
-         stm.setString(2, txtDuracao.getText());
-         stm.setDouble(3, Double.parseDouble(txtOrcamento.getText()));
-         stm.setInt(4, Integer.parseInt(id));
-      
-         stm.execute();
-      } catch (Exception e) {
-         e.printStackTrace();
-         try {
-            conn.rollback();
-         } catch (SQLException e1) {
-            System.out.print(e1.getStackTrace());
-         }
-      }
-   }
-   
-   
-   
 }

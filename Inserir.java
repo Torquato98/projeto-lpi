@@ -25,11 +25,11 @@ public class Inserir extends JFrame implements ActionListener  {
       this.conn = conn;
       
       lblTitulo = new JLabel ("Titulo");
-      lblDuracao = new JLabel ("DuraÁ„o");
-      lblOrcamento = new JLabel ("OrÁamento");
-      lblCb = new JLabel ("G. ¡rea de Conhecimento");
-      lblCb2 = new JLabel ("¡rea de Conhecimento");
-      lblCbI = new JLabel ("InstituiÁ„o");
+      lblDuracao = new JLabel ("Dura√ß√£o");
+      lblOrcamento = new JLabel ("Or√ßamento");
+      lblCb = new JLabel ("G. √Årea de Conhecimento");
+      lblCb2 = new JLabel ("√Årea de Conhecimento");
+      lblCbI = new JLabel ("Institui√ß√£o");
       lblCbP = new JLabel ("IDPesquisador");
       
       txtTitulo = new JTextField(10);
@@ -169,60 +169,4 @@ public class Inserir extends JFrame implements ActionListener  {
       }
    
    }
-   public void listarGrandeArea(){
-      String query = "SELECT DISTINCT * FROM grandes_areas_conhecimento";
-      
-      try (PreparedStatement stm = conn.prepareStatement(query);){
-            
-         ResultSet rs = stm.executeQuery();
-               
-         while(rs.next()){
-               
-            cbGa.addItem(String.valueOf(rs.getInt("id"))+ " - " +(rs.getString("nome")));
-         }
-         
-      
-      }catch(Exception e){
-         e.printStackTrace(); e.getMessage();
-      }
-         
-   }
-   
-   public void listarInstituicao(){
-      String query = "SELECT DISTINCT * FROM instituicao";
-      
-      try (PreparedStatement stm = conn.prepareStatement(query);){
-            
-         ResultSet rs = stm.executeQuery();
-               
-         while(rs.next()){
-            cbI.addItem(String.valueOf(rs.getInt("id"))+ " - " +(rs.getString("nome")));
-         }
-         
-      
-      }catch(Exception e){
-         e.printStackTrace(); e.getMessage();
-      }
-         
-   }
-   public void listarPesquisador(String id){
-      String query = "SELECT id,nome FROM pesquisadores WHERE instituicao_id = ? ";  
-      try (PreparedStatement stm = conn.prepareStatement(query);) {
-         stm.setInt(1, Integer.parseInt(id));
-         try (ResultSet rs = stm.executeQuery();) {
-               
-            while(rs.next()){
-               cbP.addItem(String.valueOf(rs.getInt("id"))+ " - " +(rs.getString("nome")));
-            }
-         
-         }catch(Exception e){
-            e.printStackTrace();
-         }
-      }catch (SQLException e1) {
-         System.out.print(e1.getStackTrace()+e1.getMessage());
-      
-      }
-         
-   }
-
 }

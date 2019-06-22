@@ -21,11 +21,11 @@ public class Excluir extends JFrame implements ActionListener  {
       this.conn = conn;
       
       lblTitulo = new JLabel ("Titulo");
-      lblDuracao = new JLabel ("Duração");
-      lblOrcamento = new JLabel ("Orçamento");
+      lblDuracao = new JLabel ("DuraÃ§Ã£o");
+      lblOrcamento = new JLabel ("OrÃ§amento");
       lblCbId = new JLabel ("ID Projeto");
       lblPesquisador = new JLabel("Pesquisador");
-      lblInstituicao = new JLabel("Instituição");
+      lblInstituicao = new JLabel("InstituiÃ§Ã£o");
       
       txtTitulo = new JTextField(20);
       txtDuracao = new JTextField(10);
@@ -38,7 +38,6 @@ public class Excluir extends JFrame implements ActionListener  {
       
       cbId = new JComboBox<String>();
       cbId.addItem("Escolha");
-      listarProjetos();
       
       Container cx = getContentPane();
       cx.setLayout(new BorderLayout());
@@ -98,7 +97,9 @@ public class Excluir extends JFrame implements ActionListener  {
          }
       }
       else if(e.getSource()==btnExcluir){
-         excluir();
+         Projeto projeto = new Projeto();
+         projeto.remove(conn);
+         
          JOptionPane.showMessageDialog(null,"Projeto excluido com sucesso!!");
          dispose();
          ConexaoBD bd = new ConexaoBD();
@@ -115,108 +116,5 @@ public class Excluir extends JFrame implements ActionListener  {
          preencher(dados[0]);
       }
    
-   }
-   public void listarProjetos(){
-      String query = "SELECT id,titulo FROM projetos";
-      
-      try (PreparedStatement stm = conn.prepareStatement(query);){
-            
-         ResultSet rs = stm.executeQuery();
-               
-         while(rs.next()){
-               
-            cbId.addItem(String.valueOf(rs.getInt("id"))+ " - " +(rs.getString("titulo")));
-             
-         }
-         
-      
-      }catch(Exception e){
-         e.printStackTrace(); e.getMessage();
-      }
-         
-   }
-   public void preencher(String id){
-      String query = "SELECT * FROM projetos WHERE id = ? ";
-      
-      try (PreparedStatement stm = conn.prepareStatement(query);) {
-         stm.setInt(1, Integer.parseInt(id));
-         try (ResultSet rs = stm.executeQuery();) {
-               
-            while(rs.next()){
-               txtTitulo.setText(rs.getString("titulo"));
-               txtDuracao.setText(rs.getString("duracao"));
-               txtOrcamento.setText(rs.getString("orcamento"));
-               listarPesquisador(rs.getString("pesquisadores_id"));
-               listarInstituicao(rs.getString("instituicao_id"));
-            }
-         
-         }catch(Exception e){
-            e.printStackTrace();
-         }
-      }catch (SQLException e1) {
-         System.out.print(e1.getStackTrace()+e1.getMessage());
-      
-      }
-   
-   }
-   public void listarPesquisador(String id){
-      String query = "SELECT id,nome FROM pesquisadores  WHERE id = ? ";  
-      try (PreparedStatement stm = conn.prepareStatement(query);) {
-         stm.setInt(1, Integer.parseInt(id));
-         try (ResultSet rs = stm.executeQuery();) {
-               
-            while(rs.next()){
-               txtPesquisador.setText(String.valueOf(rs.getInt("id"))+ " - " +(rs.getString("nome")));
-            }
-         
-         }catch(Exception e){
-            e.printStackTrace();
-         }
-      }catch (SQLException e1) {
-         System.out.print(e1.getStackTrace()+e1.getMessage());
-      
-      }
-         
-   }
-   public void listarInstituicao(String id){
-      String query = "SELECT id,nome FROM instituicao  WHERE id = ? ";  
-      try (PreparedStatement stm = conn.prepareStatement(query);) {
-         stm.setInt(1, Integer.parseInt(id));
-         try (ResultSet rs = stm.executeQuery();) {
-               
-            while(rs.next()){
-               txtInstituicao.setText(String.valueOf(rs.getInt("id"))+ " - " +(rs.getString("nome")));
-            }
-         
-         }catch(Exception e){
-            e.printStackTrace();
-         }
-      }catch (SQLException e1) {
-         System.out.print(e1.getStackTrace()+e1.getMessage());
-      
-      }
-         
-   }
-   public void excluir() {
-      String sqlUpdate = 
-         "DELETE FROM projetos WHERE id = ?";
-   
-      try (PreparedStatement stm = conn.prepareStatement(sqlUpdate);) {
-      	
-         String dados[] = String.valueOf(cbId.getSelectedItem()).split(" - ");
-         stm.setInt(1, Integer.parseInt(dados[0]));
-      
-         stm.execute();
-      } catch (Exception e) {
-         e.printStackTrace();
-         try {
-            conn.rollback();
-         } catch (SQLException e1) {
-            System.out.print(e1.getStackTrace());
-         }
-      }
-   }
-   
-   
-   
+   }      
 }
