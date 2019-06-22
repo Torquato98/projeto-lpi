@@ -14,7 +14,7 @@ public class Projeto{
    private double orcamento;
    private AreaDeConhecimento areaDeConhecimento;
    private Date dataResposta;
-   private int resposta = -1;
+   private int resposta = 0;
    private Pesquisador pesquisador;
    private Instituicao instituicao;
    private Avaliador avaliador;
@@ -133,7 +133,7 @@ public class Projeto{
    public boolean insert(Connection conn){
       boolean result = false;
        
-      String sqlInsert = "INSERT INTO projetos(titulo, duracao, orcamento, areas_conhecimento_id, instituicao_id, avaliadores_id, pesquisadores_id, data_envio) VALUES (?,?,?,?,?,?,?, NOW())";
+      String sqlInsert = "INSERT INTO projetos(titulo, duracao, orcamento, areas_conhecimento_id, instituicao_id, avaliadores_id, pesquisadores_id, data_envio, resposta) VALUES (?,?,?,?,?,?,?,0,NOW())";
           
       try(PreparedStatement stm = conn.prepareStatement(sqlInsert);){
          stm.setString(1, getTitulo());
@@ -197,12 +197,11 @@ public class Projeto{
    
    public boolean updateAnswer(Connection conn){
       boolean result = false;
-      String query = "UPDATE projetos SET resposta = ?, data_resposta = ? WHERE id = ?";
+      String query = "UPDATE projetos SET resposta = ?, data_resposta = NOW() WHERE id = ?";
       try{
          PreparedStatement stmt = conn.prepareStatement(query);
          stmt.setInt(1, getResposta());
-         stmt.setDate(2, getDataResposta());
-         stmt.setInt(3, getId());
+         stmt.setInt(2, getId());
          stmt.execute();
          
          result = true;
@@ -225,6 +224,7 @@ public class Projeto{
                setOrcamento(rs.getDouble("orcamento"));
                setAreaDeConhecimento(new AreaDeConhecimento(rs.getInt("areas_conhecimento_id")));
                setDataResposta(rs.getDate("data_resposta"));
+               System.out.println(rs.getInt("resposta"));
                setResposta(rs.getInt("resposta"));
                setPesquisador(new Pesquisador(rs.getInt("pesquisadores_id")));
                setInstituicao(new Instituicao(rs.getInt("instituicao_id")));
@@ -279,9 +279,9 @@ public class Projeto{
    @Override
     public String toString(){
       String resp = "Projeto[ID=" + this.id + ", Titulo=" + this.titulo + ", Duracao=" + this.duracao + ", Orcamento=" + this.orcamento;
-      if(this.resposta != -1){
+      if(this.resposta != 0){
          String res = "Reprovado";
-         if(this.resposta == 1){
+         if(this.resposta == 2){
             res =  "Aprovado";
          }
          resp += ", Resposta=" + res + ", Data da Resposta=" + this.dataResposta + "";

@@ -112,7 +112,7 @@ public class Inserir extends JFrame implements ActionListener  {
          ConexaoBD bd = new ConexaoBD();
          try{
             Connection conn = bd.conectar();
-            new Tela(conn);
+            new TelaProjetos(conn);
          } 
          catch (SQLException x){
             x.printStackTrace();
