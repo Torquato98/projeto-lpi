@@ -165,6 +165,7 @@ public class Pesquisador{
          ResultSet rs = stmt.executeQuery();
          if(rs.next()){
             this.setId(rs.getInt("id"));
+            this.setNome(rs.getString("nome"));
             this.setRg(rs.getString("rg"));
             this.setCpf(rs.getString("cpf"));
             this.setSexo(rs.getString("sexo").charAt(0));

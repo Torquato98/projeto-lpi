@@ -22,6 +22,10 @@ public class Projeto{
    public Projeto(){
     
    }
+   
+   public Projeto(int id){
+      this.id = id;
+   }
 
    public Projeto(int id, String titulo, String duracao, double orcamento, AreaDeConhecimento areaDeConhecimento, Date dataDeResposta, int resposta, Avaliador avaliador, Pesquisador pesquisador){
       this.id = id;
@@ -209,7 +213,7 @@ public class Projeto{
    }
     
    public Projeto select(Connection conn){
-      String sqlSelect = "SELECT id, titulo, duracao, orcamento, areas_conhecimento_id, data_resposta, resposta, pesquisadores_id, instituicao_id, avaliador_id FROM projetos WHERE id = ?";
+      String sqlSelect = "SELECT id, titulo, duracao, orcamento, areas_conhecimento_id, data_resposta, resposta, pesquisadores_id, instituicao_id, avaliadores_id FROM projetos WHERE id = ?";
         
       try (PreparedStatement stm = conn.prepareStatement(sqlSelect);) {
          stm.setInt(1, getId());
