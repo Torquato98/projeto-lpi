@@ -12,7 +12,7 @@ import java.util.Date;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 
-public class Tela extends JFrame implements ActionListener,ListSelectionListener{
+public class TelaProjetos extends JFrame implements ActionListener,ListSelectionListener{
 
    final int LARGURA_TELA = 600;
    final int ALTURA_TELA = 300;
@@ -27,30 +27,36 @@ public class Tela extends JFrame implements ActionListener,ListSelectionListener
    private JTable tabelaProjetos;
    private JPanel pnlCentro,pnlBtn,pnlLbl;
    private JScrollPane rolagem;
-   private JButton btnExcluir,btnAlterar,btnInserir;
+   private JButton btnExcluir,btnAlterar,btnInserir, btnResposta, btnVoltar;
    private JLabel lblProjeto;
    private Connection conn;
 
    
-   public Tela (Connection conn){
+   public TelaProjetos(Connection conn){
       super("Menu");
       this.conn = conn;
       instanciaJTableEScrollPane(conn);
       btnExcluir = new JButton ("Excluir");
       btnInserir = new JButton("Inserir Projetos");
       btnAlterar = new JButton("Alterar");
-      lblProjeto = new JLabel("Projetos");
+      btnResposta = new JButton("Resposta");
+      btnVoltar = new JButton("Voltar");
       
+      lblProjeto = new JLabel("Projetos");
       
       caixa = getContentPane();
       caixa.setLayout(new BorderLayout());
       pnlCentro = new JPanel(new FlowLayout());
       pnlBtn = new JPanel(new FlowLayout());
       pnlLbl = new JPanel(new FlowLayout());
+      
       pnlLbl.add(lblProjeto);
       pnlBtn.add(btnInserir);
       pnlBtn.add(btnAlterar);
       pnlBtn.add(btnExcluir);
+      pnlBtn.add(btnResposta);
+      pnlBtn.add(btnVoltar);
+      
       pnlCentro.add(rolagem);
       caixa.add(pnlCentro, BorderLayout.CENTER);
       caixa.add(pnlBtn,BorderLayout.SOUTH);
@@ -59,6 +65,8 @@ public class Tela extends JFrame implements ActionListener,ListSelectionListener
       btnExcluir.addActionListener(this);
       btnInserir.addActionListener(this);
       btnAlterar.addActionListener(this);
+      btnResposta.addActionListener(this);
+      btnVoltar.addActionListener(this);
       
       setSize(LARGURA_TELA, ALTURA_TELA);
       setLocationRelativeTo(null);
@@ -71,6 +79,20 @@ public class Tela extends JFrame implements ActionListener,ListSelectionListener
       if(e.getSource()==btnInserir){
          dispose();
          Inserir i = new Inserir(conn);
+      }
+      else if(e.getSource()==btnResposta){
+         int id = Integer.parseInt(tabelaProjetos.getValueAt(tabelaProjetos.getSelectedRow(),0)+"");
+         Projeto projeto = new Projeto(id);
+         projeto.select(this.conn);
+         if(projeto.getResposta() != 0){
+            JOptionPane.showMessageDialog(this, "Você não pode alterar a resposta de um projeto já avaliado");
+         }else{
+            RespostaProjeto r = new RespostaProjeto(this.conn, projeto);
+         }
+      }
+      else if(e.getSource()==btnVoltar){
+         dispose();
+         AgenciaApp a = new AgenciaApp(conn);
       }
       else if(e.getSource()==btnAlterar){
          try{
