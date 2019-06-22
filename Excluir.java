@@ -21,11 +21,11 @@ public class Excluir extends JFrame implements ActionListener  {
       this.conn = conn;
       
       lblTitulo = new JLabel ("Titulo");
-      lblDuracao = new JLabel ("Duração");
-      lblOrcamento = new JLabel ("Orçamento");
+      lblDuracao = new JLabel ("DuraÃ§Ã£o");
+      lblOrcamento = new JLabel ("OrÃ§amento");
       lblCbId = new JLabel ("ID Projeto");
       lblPesquisador = new JLabel("Pesquisador");
-      lblInstituicao = new JLabel("Instituição");
+      lblInstituicao = new JLabel("InstituiÃ§Ã£o");
       
       txtTitulo = new JTextField(20);
       txtDuracao = new JTextField(10);
@@ -99,7 +99,6 @@ public class Excluir extends JFrame implements ActionListener  {
       else if(e.getSource()==btnExcluir){
          Projeto projeto = new Projeto();
          projeto.remove(conn);
-         
          
          JOptionPane.showMessageDialog(null,"Projeto excluido com sucesso!!");
          dispose();

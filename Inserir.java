@@ -25,11 +25,11 @@ public class Inserir extends JFrame implements ActionListener  {
       this.conn = conn;
       
       lblTitulo = new JLabel ("Titulo");
-      lblDuracao = new JLabel ("DuraÁ„o");
-      lblOrcamento = new JLabel ("OrÁamento");
-      lblCb = new JLabel ("G. ¡rea de Conhecimento");
-      lblCb2 = new JLabel ("¡rea de Conhecimento");
-      lblCbI = new JLabel ("InstituiÁ„o");
+      lblDuracao = new JLabel ("Dura√ß√£o");
+      lblOrcamento = new JLabel ("Or√ßamento");
+      lblCb = new JLabel ("G. √Årea de Conhecimento");
+      lblCb2 = new JLabel ("√Årea de Conhecimento");
+      lblCbI = new JLabel ("Institui√ß√£o");
       lblCbP = new JLabel ("IDPesquisador");
       
       txtTitulo = new JTextField(10);
