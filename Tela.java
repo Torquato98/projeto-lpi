@@ -73,19 +73,23 @@ public class Tela extends JFrame implements ActionListener,ListSelectionListener
          Inserir i = new Inserir(conn);
       }
       else if(e.getSource()==btnAlterar){
-         dispose();
-         Alterar a = new Alterar(conn,tabelaProjetos.getValueAt(tabelaProjetos.getSelectedRow(),0)+"");
+         try{
+            Alterar a = new Alterar(conn,tabelaProjetos.getValueAt(tabelaProjetos.getSelectedRow(),0)+"");
+            dispose();
+         }catch(Exception ex){
+            JOptionPane.showMessageDialog(this, "Você deve selecionar um item da tabela para alterar");
+         }
       }
       else if(e.getSource()==btnExcluir){
          int i = JOptionPane.showOptionDialog(null, "Tem certeza que deseja excluir o projeto "+tabelaProjetos.getValueAt(tabelaProjetos.getSelectedRow(),1)+"?", "ATENÇÃO",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,null,null,null); 
          if (i == JOptionPane.YES_OPTION) { 
-            //Projeto projeto = new Projeto(Integer.parseInt(tabelaProjetos.getValueAt(tabelaProjetos.getSelectedRow(),0)));
-            //projeto.remove(conn);
-            //instanciaJTableEScrollPane(conn); 
-            //pnlCentro.add(rolagem);
-            //caixa.add(pnlCentro, BorderLayout.CENTER);
-            //validate();
-            //repaint();
+            Projeto projeto = new Projeto(Integer.parseInt(tabelaProjetos.getValueAt(tabelaProjetos.getSelectedRow(),0)+""));
+            projeto.remove(conn);
+            instanciaJTableEScrollPane(conn); 
+            pnlCentro.add(rolagem);
+            caixa.add(pnlCentro, BorderLayout.CENTER);
+            validate();
+            repaint();
          } 
       }
    
@@ -110,11 +114,8 @@ public class Tela extends JFrame implements ActionListener,ListSelectionListener
       }
    }
    public String[][] carregaDados(Connection conn){
-   
       Projeto p = new Projeto();
-      
       ArrayList<Projeto> lista = p.getAll(conn);
-
       DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
       
       String[][] saida = new String[lista.size()][colunas.length];
@@ -142,7 +143,6 @@ public class Tela extends JFrame implements ActionListener,ListSelectionListener
       tabelaProjetos.getSelectionModel().addListSelectionListener(this);
       //coloca a JTable em um scroll pane para ter a barra de rolagem
       rolagem = new JScrollPane(tabelaProjetos);
-      rolagem.setPreferredSize(new Dimension(LARGURA_SCROLL_PANE, 
-                              ALTURA_SCROLL_PANE));
+      rolagem.setPreferredSize(new Dimension(LARGURA_SCROLL_PANE, ALTURA_SCROLL_PANE));
    }   
 }
