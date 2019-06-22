@@ -19,6 +19,10 @@ public class Pesquisador{
    
    }
    
+   public Pesquisador(Instituicao instituicao){
+      this.instituicao = instituicao;
+   }
+   
    public Pesquisador(int id){
       this.id = id;
    }
@@ -157,6 +161,7 @@ public class Pesquisador{
       String query = "SELECT id, rg, cpf, nome, sexo, data_nasc, instituicao_id FROM pesquisadores WHERE id = ?";
       try{
          PreparedStatement stmt = conn.prepareStatement(query);
+         stmt.setInt(1, getId());
          ResultSet rs = stmt.executeQuery();
          if(rs.next()){
             this.setId(rs.getInt("id"));
@@ -164,12 +169,39 @@ public class Pesquisador{
             this.setCpf(rs.getString("cpf"));
             this.setSexo(rs.getString("sexo").charAt(0));
             this.setDataNasc(rs.getDate("data_nasc"));
-            this.getInstituicao().setId(rs.getInt("instituicao_id"));
+            this.setInstituicao(new Instituicao(rs.getInt("instituicao_id")));
+            this.getInstituicao().select(conn);
          }
       }catch(Exception e){
          e.printStackTrace();
       }
       return this;
+   }
+   
+   public ArrayList<Pesquisador> getAllByInstituicao(Connection conn){
+      ArrayList<Pesquisador> lista = new ArrayList<>();
+      String query = "SELECT id, rg, cpf, nome, sexo, data_nasc, instituicao_id FROM pesquisadores WHERE instituicao_id = ?";
+      try{
+         PreparedStatement stmt = conn.prepareStatement(query);
+         stmt.setInt(1, getInstituicao().getId());
+         ResultSet rs = stmt.executeQuery();
+         while(rs.next()){
+            Pesquisador pesquisador = new Pesquisador();
+            pesquisador.setId(rs.getInt("id"));
+            pesquisador.setRg(rs.getString("rg"));
+            pesquisador.setCpf(rs.getString("cpf"));
+            pesquisador.setNome(rs.getString("nome"));
+            pesquisador.setSexo(rs.getString("sexo").charAt(0));
+            pesquisador.setDataNasc(rs.getDate("data_nasc"));
+            pesquisador.setInstituicao(new Instituicao(rs.getInt("instituicao_id")));
+            
+            pesquisador.getInstituicao().select(conn);
+            lista.add(pesquisador);
+         }
+      }catch(Exception e){
+         e.printStackTrace();
+      }
+      return lista;
    }
    
    public ArrayList<Pesquisador> getAll(Connection conn){

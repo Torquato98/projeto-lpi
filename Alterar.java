@@ -22,11 +22,11 @@ public class Alterar extends JFrame implements ActionListener  {
       this.id = id;
       
       lblTitulo = new JLabel ("Titulo");
-      lblDuracao = new JLabel ("DuraÃ§Ã£o");
-      lblOrcamento = new JLabel ("OrÃ§amento");
-      lblAlterar = new JLabel("AlteraÃ§Ã£o");
+      lblDuracao = new JLabel ("Duração");
+      lblOrcamento = new JLabel ("Orçamento");
+      lblAlterar = new JLabel("Alteração");
       lblPesquisador = new JLabel("Pesquisador");
-      lblInstituicao = new JLabel("InstituiÃ§Ã£o");
+      lblInstituicao = new JLabel("Instituição");
       
       txtTitulo = new JTextField(20);
       txtDuracao = new JTextField(10);
@@ -71,8 +71,6 @@ public class Alterar extends JFrame implements ActionListener  {
       cx.add(pnlLbl,BorderLayout.NORTH);
       cx.add(pnlCentro,BorderLayout.CENTER);
       cx.add(pnlBtn,BorderLayout.SOUTH);
-      
-      preencher(id);
       
       btnVoltar.addActionListener(this);
       btnAlterar.addActionListener(this);
