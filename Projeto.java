@@ -129,7 +129,7 @@ public class Projeto{
    public boolean insert(Connection conn){
       boolean result = false;
        
-      String sqlInsert = "INSERT INTO projetos(titulo, duracao, orcamento, areas_conhecimento_id, instituicao_id, avaliador_id, pesquisador_id) VALUES (?,?,?,?,?,?,?)";
+      String sqlInsert = "INSERT INTO projetos(titulo, duracao, orcamento, areas_conhecimento_id, instituicao_id, avaliadores_id, pesquisadores_id, data_envio) VALUES (?,?,?,?,?,?,?, NOW())";
           
       try(PreparedStatement stm = conn.prepareStatement(sqlInsert);){
          stm.setString(1, getTitulo());
@@ -169,7 +169,7 @@ public class Projeto{
    public boolean update(Connection conn){
       boolean result = false;
        
-      String query = "UPDATE projetos SET titulo = ?, duracao = ?, orcamento = ?, areas_conhecimento_id = ?, instituicao_id = ?, avaliador_id = ?, pesquisador_id = ? WHERE id = ?";
+      String query = "UPDATE projetos SET titulo = ?, duracao = ?, orcamento = ?, areas_conhecimento_id = ?, instituicao_id = ?, avaliadores_id = ?, pesquisadores_id = ? WHERE id = ?";
        
       try{
          PreparedStatement stm = conn.prepareStatement(query);
@@ -209,7 +209,7 @@ public class Projeto{
    }
     
    public Projeto select(Connection conn){
-      String sqlSelect = "SELECT id, titulo, duracao, orcamento, areas_conhecimento_id, data_resposta, resposta, pesquisador_id, instituicao_id, avaliador_id FROM projetos WHERE id = ?";
+      String sqlSelect = "SELECT id, titulo, duracao, orcamento, areas_conhecimento_id, data_resposta, resposta, pesquisadores_id, instituicao_id, avaliador_id FROM projetos WHERE id = ?";
         
       try (PreparedStatement stm = conn.prepareStatement(sqlSelect);) {
          stm.setInt(1, getId());
@@ -222,9 +222,9 @@ public class Projeto{
                setAreaDeConhecimento(new AreaDeConhecimento(rs.getInt("areas_conhecimento_id")));
                setDataResposta(rs.getDate("data_resposta"));
                setResposta(rs.getInt("resposta"));
-               setPesquisador(new Pesquisador(rs.getInt("pesquisador_id")));
+               setPesquisador(new Pesquisador(rs.getInt("pesquisadores_id")));
                setInstituicao(new Instituicao(rs.getInt("instituicao_id")));
-               setAvaliador(new Avaliador(rs.getInt("avaliador_id")));
+               setAvaliador(new Avaliador(rs.getInt("avaliadores_id")));
                
                this.getAreaDeConhecimento().select(conn);
                this.getPesquisador().select(conn);
@@ -241,7 +241,7 @@ public class Projeto{
    }   
      
    public ArrayList<Projeto> getAll(Connection conn){
-      String query = "SELECT id, titulo, duracao, orcamento, areas_conhecimento_id, data_resposta, resposta, pesquisador_id, instituicao_id, avaliador_id FROM projetos";
+      String query = "SELECT id, titulo, duracao, orcamento, areas_conhecimento_id, data_resposta, resposta, pesquisadores_id, instituicao_id, avaliadores_id FROM projetos";
         
       ArrayList<Projeto> projetos = new ArrayList<>();
       try{
@@ -256,9 +256,9 @@ public class Projeto{
             projeto.setAreaDeConhecimento(new AreaDeConhecimento(rs.getInt("areas_conhecimento_id")));
             projeto.setDataResposta(rs.getDate("data_resposta"));
             projeto.setResposta(rs.getInt("resposta"));
-            projeto.setPesquisador(new Pesquisador(rs.getInt("pesquisador_id")));
+            projeto.setPesquisador(new Pesquisador(rs.getInt("pesquisadores_id")));
             projeto.setInstituicao(new Instituicao(rs.getInt("instituicao_id")));
-            projeto.setAvaliador(new Avaliador(rs.getInt("avaliador_id")));
+            projeto.setAvaliador(new Avaliador(rs.getInt("avaliadores_id")));
             
             projeto.getAreaDeConhecimento().select(conn);
             projeto.getPesquisador().select(conn);

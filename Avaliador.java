@@ -20,6 +20,10 @@ public class Avaliador{
    
    }
    
+   public Avaliador(Instituicao instituicao){
+      this.instituicao = instituicao;
+   }
+   
    public Avaliador(int id){
       this.id = id;
    }
@@ -171,6 +175,7 @@ public class Avaliador{
       String query = "SELECT grau, nome, sexo, rg, cpf, dt_nasc, instituicao_id, areas_pesquisa_id FROM avaliadores WHERE id = ?";
       try{
          PreparedStatement stmt = conn.prepareStatement(query);
+         stmt.setInt(1, getId());
          ResultSet rs = stmt.executeQuery();
          if(rs.next()){
             this.setGrau(rs.getString("grau"));

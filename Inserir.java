@@ -9,10 +9,10 @@ import java.text.SimpleDateFormat;
 
 
 public class Inserir extends JFrame implements ActionListener  {
-   private JLabel lblTitulo,lblDuracao,lblOrcamento,lblCb,lblCb2,lblCbI,lblCbP;
+   private JLabel lblTitulo,lblDuracao,lblOrcamento,lblCb,lblCb2,lblCbI,lblCbP, lblCbAvaliador;
    private JTextField txtTitulo, txtDuracao, txtOrcamento;
    private JButton btnInserir,btnVoltar;
-   private JComboBox<String> cbGa,cbA,cbI;
+   private JComboBox<String> cbGa,cbA,cbI, cbAvaliador;
    private JComboBox<String> cbP;
    private Connection conn;
    private String guarda[],guarda2[],guarda3[];
@@ -24,29 +24,33 @@ public class Inserir extends JFrame implements ActionListener  {
       super("Inserir Projetos");
       this.conn = conn;
       
-      lblTitulo = new JLabel ("Titulo");
-      lblDuracao = new JLabel ("Dura√ß√£o");
-      lblOrcamento = new JLabel ("Or√ßamento");
-      lblCb = new JLabel ("G. √Årea de Conhecimento");
-      lblCb2 = new JLabel ("√Årea de Conhecimento");
-      lblCbI = new JLabel ("Institui√ß√£o");
-      lblCbP = new JLabel ("IDPesquisador");
+      lblTitulo = new JLabel("Titulo");
+      lblDuracao = new JLabel("DuraÁ„o");
+      lblOrcamento = new JLabel("OrÁamento");
+      lblCb = new JLabel("Grande Area de Conhecimento");
+      lblCb2 = new JLabel("Area de Conhecimento");
+      lblCbI = new JLabel("InstituiÁ„o");
+      lblCbP = new JLabel("IDPesquisador");
+      lblCbAvaliador = new JLabel("Avaliador");
       
       txtTitulo = new JTextField(10);
       txtDuracao = new JTextField(10);
       txtOrcamento = new JTextField(10);
       
-      btnInserir = new JButton ("Salvar");
-      btnVoltar = new JButton ("Voltar");
+      btnInserir = new JButton("Salvar");
+      btnVoltar = new JButton("Voltar");
              
       cbGa = new JComboBox<String>();
       cbA = new JComboBox<String>();
       cbI = new JComboBox<String>();
       cbP = new JComboBox<String>();
+      cbAvaliador = new JComboBox<String>();
       cbGa.addItem("Escolha");
       cbA.addItem("Escolha");
       cbI.addItem("Escolha");
       cbP.addItem("Escolha");
+      cbAvaliador.addItem("Escolha");
+      
       listarGrandeArea();
       listarInstituicao();
       
@@ -68,14 +72,20 @@ public class Inserir extends JFrame implements ActionListener  {
       pnlResto.add(txtDuracao);
       pnlResto.add(lblOrcamento);
       pnlResto.add(txtOrcamento);
+      
       pnlCombo1.add(lblCb);
       pnlCombo1.add(cbGa);
       pnlCombo2.add(lblCb2);
       pnlCombo2.add(cbA);
+      
       pnlCombo3.add(lblCbP);
       pnlCombo3.add(cbP);
+      pnlCombo3.add(lblCbAvaliador);
+      pnlCombo3.add(cbAvaliador);
+      
       pnlCombo4.add(lblCbI);
       pnlCombo4.add(cbI); 
+      
       pnlCentro.add(pnlCombo1);
       pnlCentro.add(pnlCombo2);
       pnlCentro.add(pnlCombo4);
@@ -89,7 +99,7 @@ public class Inserir extends JFrame implements ActionListener  {
       cbGa.addActionListener(this);
       cbI.addActionListener(this);
       
-      setSize(520,250);
+      setSize(600,250);
       setLocationRelativeTo(null);
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       setVisible(true);
@@ -97,10 +107,6 @@ public class Inserir extends JFrame implements ActionListener  {
    
    public void actionPerformed (ActionEvent e){
       //Pegando dados do combobox
-      int avaliador = Integer.parseInt(String.valueOf(cbI.getSelectedItem()).split(" - ")[0]);
-      int instituicao = Integer.parseInt(String.valueOf(cbP.getSelectedItem()).split(" - ")[0]);
-      int area_conhecimento = Integer.parseInt(String.valueOf(cbA.getSelectedItem()).split(" - ")[0]);
-   
       if(e.getSource()==btnVoltar){
          dispose();
          ConexaoBD bd = new ConexaoBD();
@@ -113,6 +119,12 @@ public class Inserir extends JFrame implements ActionListener  {
          }
       }
       else if (e.getSource()==btnInserir){
+         //Pegando dados do combobox
+         int instituicao = Integer.parseInt(String.valueOf(cbI.getSelectedItem()).split(" - ")[0]);
+         int area_conhecimento = Integer.parseInt(String.valueOf(cbA.getSelectedItem()).split(" - ")[0]);
+         int pesquisador = Integer.parseInt(String.valueOf(cbP.getSelectedItem()).split(" - ")[0]);
+         int avaliador = Integer.parseInt(String.valueOf(cbAvaliador.getSelectedItem()).split(" - ")[0]);
+      
          Projeto projeto = new Projeto();
          projeto.setTitulo(txtTitulo.getText());
          projeto.setDuracao(txtDuracao.getText());
@@ -120,6 +132,7 @@ public class Inserir extends JFrame implements ActionListener  {
          projeto.setInstituicao(new Instituicao(instituicao));
          projeto.setAvaliador(new Avaliador(avaliador));
          projeto.setAreaDeConhecimento(new AreaDeConhecimento(area_conhecimento));
+         projeto.setPesquisador(new Pesquisador(pesquisador));
          projeto.insert(this.conn);
          
          JOptionPane.showMessageDialog(null, "Projeto cadastrado com sucesso");
@@ -129,44 +142,63 @@ public class Inserir extends JFrame implements ActionListener  {
          if(!dados[0].equalsIgnoreCase("Escolha")){
             cbA.removeAllItems();
             cbA.addItem("--Escolha--");
-            listarArea(dados[0]);
+            listarArea(Integer.parseInt(dados[0]));
          }
       }
       else if(e.getSource()==cbI){
-      
-         String dadis[] = String.valueOf(cbI.getSelectedItem()).split(" - ");
-         if(!dadis[0].equalsIgnoreCase("Escolha")){
+         String dados[] = String.valueOf(cbI.getSelectedItem()).split(" - ");
+         if(!dados[0].equalsIgnoreCase("Escolha")){
             cbP.removeAllItems();
             cbP.addItem("Escolha");
-            listarPesquisador(dadis[0]);
+            cbAvaliador.removeAllItems();
+            cbAvaliador.addItem("Escolha");
+            listarPesquisador(Integer.parseInt(dados[0]));
+            listarAvaliador(Integer.parseInt(dados[0]));
          }
       }
-      
-      
    }
-      
-     
-    
-  
    
-   public void listarArea(String id){
-      String query = "SELECT DISTINCT a.nome,a.id FROM areas_conhecimento a,grandes_areas_conhecimento b WHERE a.grandes_areas_conhecimento_id = ? ";
-      
-      try (PreparedStatement stm = conn.prepareStatement(query);) {
-         stm.setInt(1, Integer.parseInt(id));
-         try (ResultSet rs = stm.executeQuery();) {
-               
-            while(rs.next()){
-               cbA.addItem(String.valueOf(rs.getInt("id"))+ " - " +(rs.getString("nome")));
-            }
-         
-         }catch(Exception e){
-            e.printStackTrace();
-         }
-      }catch (SQLException e1) {
-         System.out.print(e1.getStackTrace()+e1.getMessage());
-      
+   public void listarGrandeArea(){
+      GrandeAreaDeConhecimento grande = new GrandeAreaDeConhecimento();
+      ArrayList<GrandeAreaDeConhecimento> listAreas = grande.getAll(this.conn);
+      for(GrandeAreaDeConhecimento item: listAreas){
+         cbGa.addItem(item.getId() + " - " + item.getNome());
       }
-   
    }
+   
+   public void listarInstituicao(){
+      Instituicao instituicao = new Instituicao();
+      ArrayList<Instituicao> listInstituicao = instituicao.getAll(this.conn);
+      for(Instituicao item: listInstituicao){
+         cbI.addItem(item.getId() + " - " + item.getNome());
+      }
+   }
+   
+   public void listarArea(int id){
+      AreaDeConhecimento areaDeConhecimento = new AreaDeConhecimento(new GrandeAreaDeConhecimento(id));
+      areaDeConhecimento.getGrandeAreaDeConhecimento().select(this.conn);
+      ArrayList<AreaDeConhecimento> listAreas = areaDeConhecimento.getAll(this.conn);
+      for(AreaDeConhecimento item: listAreas){
+         cbA.addItem(item.getId() + " - " + item.getNome());
+      }
+   }
+   
+   public void listarPesquisador(int id){
+      Pesquisador pesquisador = new Pesquisador(new Instituicao(id));
+      pesquisador.getInstituicao().select(this.conn);
+      ArrayList<Pesquisador> listPesquisador = pesquisador.getAll(this.conn);
+      for(Pesquisador item: listPesquisador){
+         cbP.addItem(item.getId() + " - " + item.getNome());
+      }
+   }
+   
+   public void listarAvaliador(int id){
+      Avaliador avaliador = new Avaliador(new Instituicao(id));
+      avaliador.getInstituicao().select(this.conn);
+      ArrayList<Avaliador> listAvaliador = avaliador.getAll(this.conn);
+      for(Avaliador item: listAvaliador){
+         cbAvaliador.addItem(item.getId() + " - " + item.getNome());
+      }
+   }
+      
 }

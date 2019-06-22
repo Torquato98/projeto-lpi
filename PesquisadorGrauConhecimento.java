@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class PesquisadorGrauConhecimento{
 
    private int id;
-   private int pesquisador_id;
+   private int pesquisadores_id;
    private int grau_conhecimento_id;
    private GrauConhecimento grauConhecimento;
    
@@ -60,7 +60,7 @@ public class PesquisadorGrauConhecimento{
    
    public boolean insert(Connection conn){
       boolean result = false;
-      String query = "INSERT INTO pesquisadores_graus(pesquisador_id, grau_conhecimento_id) VALUES(?,?)";
+      String query = "INSERT INTO pesquisadores_graus(pesquisadores_id, grau_conhecimento_id) VALUES(?,?)";
       try{
          PreparedStatement stmt = conn.prepareStatement(query);
          stmt.setInt(1, getPesquisadorId());
@@ -76,7 +76,7 @@ public class PesquisadorGrauConhecimento{
    
    public boolean update(Connection conn){
       boolean result = false;
-      String query = "UPDATE pesquisadores_graus SET pesquisador_id = ?, grau_conhecimento_id = ? WHERE id = ?";
+      String query = "UPDATE pesquisadores_graus SET pesquisadores_id = ?, grau_conhecimento_id = ? WHERE id = ?";
       try{
          PreparedStatement stmt = conn.prepareStatement(query);
          stmt.setInt(1, getPesquisadorId());
@@ -91,13 +91,13 @@ public class PesquisadorGrauConhecimento{
    }
    
    public PesquisadorGrauConhecimento select(Connection conn){
-      String query = "SELECT pesquisador_id, grau_conhecimento_id FROM pesquisadores_graus WHERE id = ?";
+      String query = "SELECT pesquisadores_id, grau_conhecimento_id FROM pesquisadores_graus WHERE id = ?";
       try{
          PreparedStatement stmt = conn.prepareStatement(query);
          stmt.setInt(1, getId());
          ResultSet rs = stmt.executeQuery();
          if(rs.next()){
-            this.setPesquisadorId(rs.getInt("pesquisador_id"));
+            this.setPesquisadorId(rs.getInt("pesquisadores_id"));
             this.setGrauConhecimentoId(rs.getInt("grau_conhecimento_id"));
             this.setGrauConhecimento(new GrauConhecimento(rs.getInt("grau_conhecimento_id")));
             
@@ -111,13 +111,13 @@ public class PesquisadorGrauConhecimento{
    
    public ArrayList<PesquisadorGrauConhecimento> getAll(Connection conn){
       ArrayList<PesquisadorGrauConhecimento> list = new ArrayList<>();
-      String query = "SELECT pesquisador_id, grau_conhecimento_id FROM pesquisadores_graus";
+      String query = "SELECT pesquisadores_id, grau_conhecimento_id FROM pesquisadores_graus";
       try{
          PreparedStatement stmt = conn.prepareStatement(query);
          ResultSet rs = stmt.executeQuery();
          while(rs.next()){
             PesquisadorGrauConhecimento pg = new PesquisadorGrauConhecimento();
-            pg.setPesquisadorId(rs.getInt("pesquisador_id"));
+            pg.setPesquisadorId(rs.getInt("pesquisadores_id"));
             pg.setGrauConhecimentoId(rs.getInt("grau_conhecimento_id"));
             pg.setGrauConhecimento(new GrauConhecimento(rs.getInt("grau_conhecimento_id")));
             pg.getGrauConhecimento().carregar(conn);

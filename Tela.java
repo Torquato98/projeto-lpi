@@ -18,7 +18,7 @@ public class Tela extends JFrame implements ActionListener,ListSelectionListener
    final int ALTURA_TELA = 300;
    final int LARGURA_SCROLL_PANE = LARGURA_TELA - 200;
    final int ALTURA_SCROLL_PANE = ALTURA_TELA - 110;
-   private String[] colunas = {"ID", "Titulo", "Área de Conhecimento", "Duração","Orçamento"};
+   private String[] colunas = {"ID", "Titulo", "Area de Conhecimento", "Duração","Orçamento"};
    private Object[][] projetos;
    
    
@@ -79,15 +79,13 @@ public class Tela extends JFrame implements ActionListener,ListSelectionListener
       else if(e.getSource()==btnExcluir){
          int i = JOptionPane.showOptionDialog(null, "Tem certeza que deseja excluir o projeto "+tabelaProjetos.getValueAt(tabelaProjetos.getSelectedRow(),1)+"?", "ATENÇÃO",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,null,null,null); 
          if (i == JOptionPane.YES_OPTION) { 
-            excluirProjeto(conn,tabelaProjetos.getValueAt(tabelaProjetos.getSelectedRow(),0)+"");
-            JOptionPane.showMessageDialog(null,"Projeto excluido com sucesso!!");
-            caixa.remove(pnlCentro);
-            pnlCentro.remove(rolagem);
-            instanciaJTableEScrollPane(conn); 
-            pnlCentro.add(rolagem);
-            caixa.add(pnlCentro, BorderLayout.CENTER);
-            validate();
-            repaint();
+            //Projeto projeto = new Projeto(Integer.parseInt(tabelaProjetos.getValueAt(tabelaProjetos.getSelectedRow(),0)));
+            //projeto.remove(conn);
+            //instanciaJTableEScrollPane(conn); 
+            //pnlCentro.add(rolagem);
+            //caixa.add(pnlCentro, BorderLayout.CENTER);
+            //validate();
+            //repaint();
          } 
       }
    

@@ -51,7 +51,7 @@ public class Instituicao{
         String query = "SELECT id, nome FROM instituicao WHERE id = ?";
         try{
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setInt(0, this.getId());
+            stmt.setInt(1, this.getId());
             ResultSet rs = stmt.executeQuery();
             if(rs.next()){
                 this.setNome(rs.getString("nome"));
@@ -114,7 +114,7 @@ public class Instituicao{
     
     public boolean delete(Connection conn){
         boolean result = false;
-        //Isso aqui é um comentário para teste
+        
         String query = "DELETE FROM instituicao WHERE id = ?";
         try{
             PreparedStatement stmt = conn.prepareStatement(query);
