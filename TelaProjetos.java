@@ -135,6 +135,7 @@ public class TelaProjetos extends JFrame implements ActionListener,ListSelection
          JOptionPane.showMessageDialog(this, resultado);
       }
    }
+   
    public String[][] carregaDados(Connection conn){
       Projeto p = new Projeto();
       ArrayList<Projeto> lista = p.getAll(conn);
@@ -156,9 +157,9 @@ public class TelaProjetos extends JFrame implements ActionListener,ListSelection
       
       return saida;
    }
+   
    //metodo para centralizar a instanciacao da JTable e nao ficar repetindo codigo
    public void instanciaJTableEScrollPane(Connection conn){
-      
       //carrega a matriz de pedidos para instanciar a JTable
       projetos = carregaDados(this.conn);
       tabelaProjetos = new JTable(projetos, colunas);

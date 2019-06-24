@@ -16,12 +16,16 @@ public class AgenciaApp extends JFrame implements ActionListener{
    
    private JMenu menuProjetos;
    private JMenu menuPesquisadores;
+   private JMenu menuAvaliadores;
    
    private JMenuItem menuProjetosInserir;
    private JMenuItem menuProjetosConsultar;
    
    private JMenuItem menuPesquisadoresInserir;
    private JMenuItem menuPesquisadoresConsultar;
+   
+   private JMenuItem menuAvaliadoresInserir;
+   private JMenuItem menuAvaliadoresConsultar;
    
    private Connection conn;
    
@@ -33,6 +37,7 @@ public class AgenciaApp extends JFrame implements ActionListener{
       menuBar = new JMenuBar();
       menuProjetos = new JMenu("Projetos");
       menuPesquisadores = new JMenu("Pesquisadores");
+      menuAvaliadores = new JMenu("Avaliadores");
       
       menuProjetosInserir = new JMenuItem("Inserir");
       menuProjetosConsultar = new JMenuItem("Consultar");
@@ -40,9 +45,13 @@ public class AgenciaApp extends JFrame implements ActionListener{
       menuPesquisadoresInserir = new JMenuItem("Inserir");
       menuPesquisadoresConsultar = new JMenuItem("Consultar");
       
+      menuAvaliadoresInserir = new JMenuItem("Inserir");
+      menuAvaliadoresConsultar = new JMenuItem("Consultar");
+      
       setJMenuBar(menuBar);
       menuBar.add(menuProjetos);
       menuBar.add(menuPesquisadores);
+      menuBar.add(menuAvaliadores);
       
       menuProjetos.add(menuProjetosInserir);
       menuProjetos.add(menuProjetosConsultar);
@@ -50,11 +59,17 @@ public class AgenciaApp extends JFrame implements ActionListener{
       menuPesquisadores.add(menuPesquisadoresInserir);
       menuPesquisadores.add(menuPesquisadoresConsultar);
       
+      menuAvaliadores.add(menuAvaliadoresInserir);
+      menuAvaliadores.add(menuAvaliadoresConsultar);
+      
       menuProjetosInserir.addActionListener(this);
       menuProjetosConsultar.addActionListener(this);
       
       menuPesquisadoresInserir.addActionListener(this);
       menuPesquisadoresConsultar.addActionListener(this);
+      
+      menuAvaliadoresInserir.addActionListener(this);
+      menuAvaliadoresConsultar.addActionListener(this);
       
       setSize(LARGURA_TELA, ALTURA_TELA);
       setLocationRelativeTo(null);
@@ -70,6 +85,9 @@ public class AgenciaApp extends JFrame implements ActionListener{
       }else if(e.getSource() == menuProjetosConsultar){
          dispose();
          new TelaProjetos(conn);
+      }else if(e.getSource() == menuAvaliadoresConsultar){
+         dispose();
+         new TelaAvaliadores(conn);
       }
    }
    
