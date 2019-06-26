@@ -81,10 +81,19 @@ public class AgenciaApp extends JFrame implements ActionListener{
    public void actionPerformed(ActionEvent e){
       if(e.getSource() == menuProjetosInserir){
          dispose();
-         new Inserir(conn);
+         new InserirProjeto(conn);
       }else if(e.getSource() == menuProjetosConsultar){
          dispose();
          new TelaProjetos(conn);
+      }else if(e.getSource() == menuPesquisadoresInserir){
+         dispose();
+         new InserirPesquisador(conn);
+      }else if(e.getSource() == menuPesquisadoresConsultar){
+         dispose();
+         new TelaPesquisadores(conn);
+      }else if(e.getSource() == menuAvaliadoresInserir){
+         dispose();
+         new InserirAvaliador(conn);
       }else if(e.getSource() == menuAvaliadoresConsultar){
          dispose();
          new TelaAvaliadores(conn);

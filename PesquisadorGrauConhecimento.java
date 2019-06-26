@@ -8,7 +8,6 @@ public class PesquisadorGrauConhecimento{
 
    private int id;
    private int pesquisadores_id;
-   private int grau_conhecimento_id;
    private GrauConhecimento grauConhecimento;
    
    public PesquisadorGrauConhecimento(){
@@ -19,10 +18,13 @@ public class PesquisadorGrauConhecimento{
       this.id = id;
    }
    
-   public PesquisadorGrauConhecimento(int id, int pesquisador_id, int grau_conhecimento_id, GrauConhecimento grauConhecimento){
+   public PesquisadorGrauConhecimento(String pesquisadores_id){
+      this.pesquisadores_id = Integer.parseInt(pesquisadores_id);
+   }
+   
+   public PesquisadorGrauConhecimento(int id, int pesquisadores_id, GrauConhecimento grauConhecimento){
       this.id = id;
-      this.pesquisador_id = pesquisador_id;
-      this.grau_conhecimento_id = grau_conhecimento_id;
+      this.pesquisadores_id = pesquisadores_id;
       this.grauConhecimento = grauConhecimento;
    }
    
@@ -30,12 +32,8 @@ public class PesquisadorGrauConhecimento{
       this.id = id;
    }
    
-   public void setPesquisadorId(int pesquisador_id){
-      this.pesquisador_id = pesquisador_id;
-   }
-   
-   public void setGrauConhecimentoId(int grau_conhecimento_id){
-      this.grau_conhecimento_id = grau_conhecimento_id;
+   public void setPesquisadoresId(int pesquisadores_id){
+      this.pesquisadores_id = pesquisadores_id;
    }
    
    public void setGrauConhecimento(GrauConhecimento grauConhecimento){
@@ -46,27 +44,38 @@ public class PesquisadorGrauConhecimento{
       return id;
    }
    
-   public int getPesquisadorId(){
-      return pesquisador_id;
+   public int getPesquisadoresId(){
+      return pesquisadores_id;
    }
    
-   public int getGrauConhecimentoId(){
-      return grau_conhecimento_id;
-   }
    
    public GrauConhecimento getGrauConhecimento(){
       return grauConhecimento;
    }
    
+   private void getLastIdInserted(Connection conn){
+      try{
+         String query2 = "SELECT LAST_INSERT_ID()";
+         PreparedStatement stmt2 = conn.prepareStatement(query2);
+         ResultSet rs = stmt2.executeQuery();
+         if(rs.next()){
+            this.setId(rs.getInt(1));
+         }
+      }catch(Exception e){
+         e.printStackTrace();
+      }
+   }
+   
    public boolean insert(Connection conn){
       boolean result = false;
-      String query = "INSERT INTO pesquisadores_graus(pesquisadores_id, grau_conhecimento_id) VALUES(?,?)";
+      String query = "INSERT INTO pesquisadores_graus(pesquisadores_id, graus_conhecimento_id) VALUES(?,?)";
       try{
          PreparedStatement stmt = conn.prepareStatement(query);
-         stmt.setInt(1, getPesquisadorId());
-         stmt.setInt(2, getGrauConhecimentoId());
+         stmt.setInt(1, getPesquisadoresId());
+         stmt.setInt(2, getGrauConhecimento().getId());
          stmt.execute();
          
+         this.getLastIdInserted(conn);
          result = true;
       }catch(Exception e){
          e.printStackTrace();
@@ -76,11 +85,12 @@ public class PesquisadorGrauConhecimento{
    
    public boolean update(Connection conn){
       boolean result = false;
-      String query = "UPDATE pesquisadores_graus SET pesquisadores_id = ?, grau_conhecimento_id = ? WHERE id = ?";
+      String query = "UPDATE pesquisadores_graus SET pesquisadores_id = ?, graus_conhecimento_id = ? WHERE id = ?";
       try{
          PreparedStatement stmt = conn.prepareStatement(query);
-         stmt.setInt(1, getPesquisadorId());
-         stmt.setInt(2, getGrauConhecimentoId());
+         stmt.setInt(1, getPesquisadoresId());
+         stmt.setInt(2, getGrauConhecimento().getId());
+         stmt.setInt(3, getId());
          stmt.execute();
          
          result = true;
@@ -91,15 +101,15 @@ public class PesquisadorGrauConhecimento{
    }
    
    public PesquisadorGrauConhecimento select(Connection conn){
-      String query = "SELECT pesquisadores_id, grau_conhecimento_id FROM pesquisadores_graus WHERE id = ?";
+      String query = "SELECT id, pesquisadores_id, graus_conhecimento_id FROM pesquisadores_graus WHERE id = ?";
       try{
          PreparedStatement stmt = conn.prepareStatement(query);
          stmt.setInt(1, getId());
          ResultSet rs = stmt.executeQuery();
          if(rs.next()){
-            this.setPesquisadorId(rs.getInt("pesquisadores_id"));
-            this.setGrauConhecimentoId(rs.getInt("grau_conhecimento_id"));
-            this.setGrauConhecimento(new GrauConhecimento(rs.getInt("grau_conhecimento_id")));
+            this.setId(rs.getInt("id"));
+            this.setPesquisadoresId(rs.getInt("pesquisadores_id"));
+            this.setGrauConhecimento(new GrauConhecimento(rs.getInt("graus_conhecimento_id")));
             
             this.getGrauConhecimento().carregar(conn); 
          }
@@ -109,17 +119,35 @@ public class PesquisadorGrauConhecimento{
       return this;
    }
    
+   public PesquisadorGrauConhecimento getByPesquisadorId(Connection conn){
+      String query = "SELECT id, pesquisadores_id, graus_conhecimento_id FROM pesquisadores_graus WHERE pesquisadores_id = ?";
+      try{
+         PreparedStatement stmt = conn.prepareStatement(query);
+         stmt.setInt(1, getPesquisadoresId());
+         ResultSet rs = stmt.executeQuery();
+         if(rs.next()){
+            this.setId(rs.getInt("id"));
+            this.setPesquisadoresId(rs.getInt("pesquisadores_id"));
+            this.setGrauConhecimento(new GrauConhecimento(rs.getInt("graus_conhecimento_id")));
+            
+            this.getGrauConhecimento().carregar(conn);
+         }
+      }catch(Exception e){
+         e.printStackTrace();
+      }
+      return this;
+   }
+   
    public ArrayList<PesquisadorGrauConhecimento> getAll(Connection conn){
       ArrayList<PesquisadorGrauConhecimento> list = new ArrayList<>();
-      String query = "SELECT pesquisadores_id, grau_conhecimento_id FROM pesquisadores_graus";
+      String query = "SELECT pesquisadores_id, graus_conhecimento_id FROM pesquisadores_graus";
       try{
          PreparedStatement stmt = conn.prepareStatement(query);
          ResultSet rs = stmt.executeQuery();
          while(rs.next()){
             PesquisadorGrauConhecimento pg = new PesquisadorGrauConhecimento();
-            pg.setPesquisadorId(rs.getInt("pesquisadores_id"));
-            pg.setGrauConhecimentoId(rs.getInt("grau_conhecimento_id"));
-            pg.setGrauConhecimento(new GrauConhecimento(rs.getInt("grau_conhecimento_id")));
+            pg.setPesquisadoresId(rs.getInt("pesquisadores_id"));
+            pg.setGrauConhecimento(new GrauConhecimento(rs.getInt("graus_conhecimento_id")));
             pg.getGrauConhecimento().carregar(conn);
             list.add(pg);
          }

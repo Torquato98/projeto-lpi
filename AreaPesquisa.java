@@ -116,7 +116,7 @@ public class AreaPesquisa{
 
    public ArrayList<AreaPesquisa> getAll(Connection conn){
       ArrayList<AreaPesquisa> list = new ArrayList<>();
-      String query = "SELECT nome, areas_conhecimento_id FROM areas_pesquisa";
+      String query = "SELECT id, nome, areas_conhecimento_id FROM areas_pesquisa";
       try{
          PreparedStatement stmt = conn.prepareStatement(query);
          ResultSet rs = stmt.executeQuery();

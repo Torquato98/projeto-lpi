@@ -13,7 +13,7 @@ public class Pesquisador{
    private char sexo;
    private Date dataNasc;
    private Instituicao instituicao;
-   private GrauConhecimento grauConhecimento;
+   private PesquisadorGrauConhecimento pesquisadorGrauConhecimento;
    
    public Pesquisador(){
    
@@ -27,7 +27,7 @@ public class Pesquisador{
       this.id = id;
    }
    
-   public Pesquisador(int id, String rg, String cpf, String nome, char sexo, Date dataNasc, Instituicao instituicao, GrauConhecimento grauConhecimento){
+   public Pesquisador(int id, String rg, String cpf, String nome, char sexo, Date dataNasc, Instituicao instituicao, PesquisadorGrauConhecimento pesquisadorGrauConhecimento){
       this.id = id;
       this.rg = rg;
       this.cpf = cpf;
@@ -35,7 +35,7 @@ public class Pesquisador{
       this.sexo = sexo;
       this.dataNasc = dataNasc;
       this.instituicao = instituicao;
-      this.grauConhecimento = grauConhecimento;
+      this.pesquisadorGrauConhecimento = pesquisadorGrauConhecimento;
    }
    
    public void setId(int id){
@@ -66,8 +66,8 @@ public class Pesquisador{
       this.instituicao = instituicao;
    }
    
-   public void setGrauConhecimento(GrauConhecimento grauConhecimento){
-      this.grauConhecimento = grauConhecimento;
+   public void setPesquisadorGrauConhecimento(PesquisadorGrauConhecimento pesquisadorGrauConhecimento){
+      this.pesquisadorGrauConhecimento = pesquisadorGrauConhecimento;
    }
    
    public int getId(){
@@ -98,8 +98,8 @@ public class Pesquisador{
       return instituicao;
    }
    
-   public GrauConhecimento getGrauConhecimento(){
-      return grauConhecimento;
+   public PesquisadorGrauConhecimento getPesquisadorGrauConhecimento(){
+      return pesquisadorGrauConhecimento;
    }
    
    private void getLastIdInserted(Connection conn){
@@ -117,7 +117,7 @@ public class Pesquisador{
    
    public boolean insert(Connection conn){
       boolean result = false;
-      String query = "INSERT INTO pesquisador(rg, cpf, nome, sexo, data_nasc, instituicao_id) VALUES(?,?,?,?,?,?)";
+      String query = "INSERT INTO pesquisadores(rg, cpf, nome, sexo, data_nasc, instituicao_id) VALUES(?,?,?,?,?,?)";
       try{
          PreparedStatement stmt = conn.prepareStatement(query);
          stmt.setString(1, getRg());
@@ -129,6 +129,8 @@ public class Pesquisador{
          stmt.execute();
          
          this.getLastIdInserted(conn);
+         this.getPesquisadorGrauConhecimento().setPesquisadoresId(this.getId());
+         this.getPesquisadorGrauConhecimento().insert(conn);
          
          result = true;
       }catch(Exception e){
@@ -139,7 +141,7 @@ public class Pesquisador{
    
    public boolean update(Connection conn){
       boolean result = false;
-      String query = "UPDATE pesquisador SET rg = ?, cpf = ?, nome = ?, sexo = ?, data_nasc = ?, instituicao_id = ? WHERE id = ?";
+      String query = "UPDATE pesquisadores SET rg = ?, cpf = ?, nome = ?, sexo = ?, data_nasc = ?, instituicao_id = ? WHERE id = ?";
       try{
          PreparedStatement stmt = conn.prepareStatement(query);
          stmt.setString(1, getRg());
@@ -148,6 +150,25 @@ public class Pesquisador{
          stmt.setString(4, getSexo() + "");
          stmt.setDate(5, getDataNasc());
          stmt.setInt(6, getInstituicao().getId());
+         stmt.setInt(7, getId());
+         stmt.execute();
+         
+         this.getPesquisadorGrauConhecimento().setPesquisadoresId(this.getId());
+         this.getPesquisadorGrauConhecimento().update(conn);
+         
+         result = true;
+      }catch(Exception e){
+         e.printStackTrace();
+      }
+      return result;
+   }
+   
+   public boolean remove(Connection conn){
+      boolean result = false;
+      String query = "DELETE FROM pesquisadores WHERE id = ?";
+      try{
+         PreparedStatement stmt = conn.prepareStatement(query);
+         stmt.setInt(1, getId());
          stmt.execute();
          
          result = true;
@@ -171,7 +192,11 @@ public class Pesquisador{
             this.setSexo(rs.getString("sexo").charAt(0));
             this.setDataNasc(rs.getDate("data_nasc"));
             this.setInstituicao(new Instituicao(rs.getInt("instituicao_id")));
+            this.setPesquisadorGrauConhecimento(new PesquisadorGrauConhecimento(rs.getInt("id")+""));
+            
+            this.getPesquisadorGrauConhecimento().getByPesquisadorId(conn);
             this.getInstituicao().select(conn);
+            
          }
       }catch(Exception e){
          e.printStackTrace();
@@ -220,8 +245,10 @@ public class Pesquisador{
             pesquisador.setSexo(rs.getString("sexo").charAt(0));
             pesquisador.setDataNasc(rs.getDate("data_nasc"));
             pesquisador.setInstituicao(new Instituicao(rs.getInt("instituicao_id")));
+            pesquisador.setPesquisadorGrauConhecimento(new PesquisadorGrauConhecimento(rs.getInt("id")+""));
             
             pesquisador.getInstituicao().select(conn);
+            pesquisador.getPesquisadorGrauConhecimento().getByPesquisadorId(conn);
             lista.add(pesquisador);
          }
       }catch(Exception e){
@@ -232,7 +259,7 @@ public class Pesquisador{
    
    @Override
    public String toString(){
-      return "Pesquisador[ID = " + id + ", nome = " + nome + ", sexo = " + sexo + ", data de nascimento " + dataNasc + ", instituicao = " + instituicao +  ", grau de conhecimento = " + grauConhecimento + " ]";
+      return "Pesquisador[ID = " + id + ", nome = " + nome + ", sexo = " + sexo + ", data de nascimento " + dataNasc + ", instituicao = " + instituicao +  ", grau de conhecimento = " + pesquisadorGrauConhecimento.getGrauConhecimento() + " ]";
    }
    
 }

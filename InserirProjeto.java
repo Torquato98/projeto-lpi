@@ -8,7 +8,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 
-public class Inserir extends JFrame implements ActionListener  {
+public class InserirProjeto extends JFrame implements ActionListener  {
    private JLabel lblTitulo,lblDuracao,lblOrcamento,lblCb,lblCb2,lblCbI,lblCbP, lblCbAvaliador;
    private JTextField txtTitulo, txtDuracao, txtOrcamento;
    private JButton btnInserir,btnVoltar;
@@ -20,7 +20,7 @@ public class Inserir extends JFrame implements ActionListener  {
    private java.sql.Date data = new java.sql.Date (dt.getTime());;
 
    
-   public Inserir (Connection conn){
+   public InserirProjeto(Connection conn){
       super("Inserir Projetos");
       this.conn = conn;
       
