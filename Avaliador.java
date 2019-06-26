@@ -150,7 +150,7 @@ public class Avaliador{
    
    public boolean update(Connection conn){
       boolean result = false;
-      String query = "UPDATE avaliadores SET grau = ?, nome = ?, sexo = ?, rg = ?, cpf = ?, data_nasc = ?, instituicao_id = ?, areas_pesquisa_id = ? WHERE id = ?";
+      String query = "UPDATE avaliadores SET grau = ?, nome = ?, sexo = ?, rg = ?, cpf = ?, dt_nasc = ?, instituicao_id = ?, areas_pesquisa_id = ? WHERE id = ?";
       try{
          PreparedStatement stmt = conn.prepareStatement(query);
          stmt.setString(1, getGrau());
@@ -162,6 +162,21 @@ public class Avaliador{
          stmt.setInt(7, getInstituicao().getId());
          stmt.setInt(8, getAreaPesquisa().getId());
          stmt.setInt(9, getId());
+         stmt.execute();
+         
+         result = true;
+      }catch(Exception e){
+         e.printStackTrace();
+      }
+      return result;
+   }
+   
+   public boolean remove(Connection conn){
+      boolean result = false;
+      String query = "DELETE FROM avaliadores WHERE id = ?";
+      try{
+         PreparedStatement stmt = conn.prepareStatement(query);
+         stmt.setInt(1, getId());
          stmt.execute();
          
          result = true;

@@ -133,7 +133,7 @@ public class Projeto{
    public boolean insert(Connection conn){
       boolean result = false;
        
-      String sqlInsert = "INSERT INTO projetos(titulo, duracao, orcamento, areas_conhecimento_id, instituicao_id, avaliadores_id, pesquisadores_id, data_envio, resposta) VALUES (?,?,?,?,?,?,?,0,NOW())";
+      String sqlInsert = "INSERT INTO projetos(titulo, duracao, orcamento, areas_conhecimento_id, instituicao_id, avaliadores_id, pesquisadores_id, data_envio, resposta) VALUES (?,?,?,?,?,?,?,NOW(),0)";
           
       try(PreparedStatement stm = conn.prepareStatement(sqlInsert);){
          stm.setString(1, getTitulo());

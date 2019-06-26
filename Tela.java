@@ -12,51 +12,44 @@ import java.util.Date;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 
-public class TelaProjetos extends JFrame implements ActionListener,ListSelectionListener{
+public class Tela extends JFrame implements ActionListener,ListSelectionListener{
 
    final int LARGURA_TELA = 600;
    final int ALTURA_TELA = 300;
    final int LARGURA_SCROLL_PANE = LARGURA_TELA - 200;
    final int ALTURA_SCROLL_PANE = ALTURA_TELA - 110;
-   private String[] colunas = {"ID", "Titulo", "Area de Conhecimento", "Duração","Orçamento"};
+   private String[] colunas = {"ID", "Titulo", "Área de Conhecimento", "Duração","Orçamento"};
    private Object[][] projetos;
-   
    
    private Container caixa;
    private Integer[] pedidos;
    private JTable tabelaProjetos;
    private JPanel pnlCentro,pnlBtn,pnlLbl;
    private JScrollPane rolagem;
-   private JButton btnExcluir,btnAlterar,btnInserir, btnResposta, btnVoltar;
+   private JButton btnExcluir,btnAlterar,btnInserir;
    private JLabel lblProjeto;
    private Connection conn;
 
    
-   public TelaProjetos(Connection conn){
+   public Tela (Connection conn){
       super("Menu");
       this.conn = conn;
       instanciaJTableEScrollPane(conn);
       btnExcluir = new JButton ("Excluir");
       btnInserir = new JButton("Inserir Projetos");
       btnAlterar = new JButton("Alterar");
-      btnResposta = new JButton("Resposta");
-      btnVoltar = new JButton("Voltar");
-      
       lblProjeto = new JLabel("Projetos");
+      
       
       caixa = getContentPane();
       caixa.setLayout(new BorderLayout());
       pnlCentro = new JPanel(new FlowLayout());
       pnlBtn = new JPanel(new FlowLayout());
       pnlLbl = new JPanel(new FlowLayout());
-      
       pnlLbl.add(lblProjeto);
       pnlBtn.add(btnInserir);
       pnlBtn.add(btnAlterar);
       pnlBtn.add(btnExcluir);
-      pnlBtn.add(btnResposta);
-      pnlBtn.add(btnVoltar);
-      
       pnlCentro.add(rolagem);
       caixa.add(pnlCentro, BorderLayout.CENTER);
       caixa.add(pnlBtn,BorderLayout.SOUTH);
@@ -65,8 +58,6 @@ public class TelaProjetos extends JFrame implements ActionListener,ListSelection
       btnExcluir.addActionListener(this);
       btnInserir.addActionListener(this);
       btnAlterar.addActionListener(this);
-      btnResposta.addActionListener(this);
-      btnVoltar.addActionListener(this);
       
       setSize(LARGURA_TELA, ALTURA_TELA);
       setLocationRelativeTo(null);
@@ -78,42 +69,24 @@ public class TelaProjetos extends JFrame implements ActionListener,ListSelection
       conn = this.conn;
       if(e.getSource()==btnInserir){
          dispose();
-         InserirProjeto i = new InserirProjeto(conn);
-      }
-      else if(e.getSource()==btnResposta){
-         int id = Integer.parseInt(tabelaProjetos.getValueAt(tabelaProjetos.getSelectedRow(),0)+"");
-         Projeto projeto = new Projeto(id);
-         projeto.select(this.conn);
-         if(projeto.getResposta() != 0){
-            JOptionPane.showMessageDialog(this, "Você não pode alterar a resposta de um projeto já avaliado");
-         }else{
-            RespostaProjeto r = new RespostaProjeto(this.conn, projeto);
-         }
-      }
-      else if(e.getSource()==btnVoltar){
-         dispose();
-         AgenciaApp a = new AgenciaApp(conn);
+         Inserir i = new Inserir(conn);
       }
       else if(e.getSource()==btnAlterar){
-         try{
-            Alterar a = new Alterar(conn,tabelaProjetos.getValueAt(tabelaProjetos.getSelectedRow(),0)+"");
-            dispose();
-         }catch(Exception ex){
-            JOptionPane.showMessageDialog(this, "Você deve selecionar um item da tabela para alterar");
-         }
+         dispose();
+         Alterar a = new Alterar(conn,tabelaProjetos.getValueAt(tabelaProjetos.getSelectedRow(),0)+"");
       }
       else if(e.getSource()==btnExcluir){
-         int i = JOptionPane.showOptionDialog(null, "Tem certeza que deseja excluir o projeto "+tabelaProjetos.getValueAt(tabelaProjetos.getSelectedRow(),1)+"?", "ATENÃ‡ÃƒO",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,null,null,null); 
+         int i = JOptionPane.showOptionDialog(null, "Tem certeza que deseja excluir o projeto "+tabelaProjetos.getValueAt(tabelaProjetos.getSelectedRow(),1)+"?", "ATENÇÃO",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,null,null,null); 
          if (i == JOptionPane.YES_OPTION) { 
-            Projeto projeto = new Projeto(Integer.parseInt(tabelaProjetos.getValueAt(tabelaProjetos.getSelectedRow(),0)+""));
-            projeto.remove(conn);
+            excluirProjeto(conn,tabelaProjetos.getValueAt(tabelaProjetos.getSelectedRow(),0)+"");
+            JOptionPane.showMessageDialog(null,"Projeto excluido com sucesso!!");
+            caixa.remove(pnlCentro);
+            pnlCentro.remove(rolagem);
             instanciaJTableEScrollPane(conn); 
             pnlCentro.add(rolagem);
             caixa.add(pnlCentro, BorderLayout.CENTER);
             validate();
             repaint();
-            dispose();
-            new TelaProjetos(this.conn);
          } 
       }
    
@@ -137,10 +110,12 @@ public class TelaProjetos extends JFrame implements ActionListener,ListSelection
          JOptionPane.showMessageDialog(this, resultado);
       }
    }
-   
    public String[][] carregaDados(Connection conn){
+   
       Projeto p = new Projeto();
+      
       ArrayList<Projeto> lista = p.getAll(conn);
+
       DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
       
       String[][] saida = new String[lista.size()][colunas.length];
@@ -159,15 +134,37 @@ public class TelaProjetos extends JFrame implements ActionListener,ListSelection
       
       return saida;
    }
-   
    //metodo para centralizar a instanciacao da JTable e nao ficar repetindo codigo
    public void instanciaJTableEScrollPane(Connection conn){
+      
       //carrega a matriz de pedidos para instanciar a JTable
       projetos = carregaDados(this.conn);
       tabelaProjetos = new JTable(projetos, colunas);
       tabelaProjetos.getSelectionModel().addListSelectionListener(this);
       //coloca a JTable em um scroll pane para ter a barra de rolagem
       rolagem = new JScrollPane(tabelaProjetos);
-      rolagem.setPreferredSize(new Dimension(LARGURA_SCROLL_PANE, ALTURA_SCROLL_PANE));
-   }   
+      rolagem.setPreferredSize(new Dimension(LARGURA_SCROLL_PANE, 
+                              ALTURA_SCROLL_PANE));
+   }
+   
+   public void excluirProjeto(Connection conn,String id) {
+      String query = 
+         "DELETE FROM projetos WHERE id = ?";
+   
+      try (PreparedStatement stm = conn.prepareStatement(query);) {
+      
+         stm.setInt(1,Integer.parseInt(id));
+      
+         stm.execute();
+      } catch (Exception e) {
+         e.printStackTrace();
+         try {
+            conn.rollback();
+         } catch (SQLException e1) {
+            System.out.print(e1.getStackTrace());
+         }
+      }
+   }
+   
+   
 }

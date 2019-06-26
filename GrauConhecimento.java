@@ -2,7 +2,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+import java.util.ArrayList;
 
 public class GrauConhecimento{
    private int id;
@@ -31,7 +31,7 @@ public class GrauConhecimento{
       this.nome = nome;
    }
   
-   public boolean  incluir(Connection conn){
+   public boolean incluir(Connection conn){
       boolean result = false;
       String query = "INSERT INTO grau_conhecimento (id, nome) VALUES (?,?) ";
       try {PreparedStatement stm = conn.prepareStatement(query);
@@ -48,7 +48,7 @@ public class GrauConhecimento{
     
    public boolean excluir(Connection conn){
       boolean result = false;
-      String query = "DELETE FROM grau_conhecimento WHERE id = ?";
+      String query = "DELETE FROM graus_conhecimento WHERE id = ?";
       try{PreparedStatement stm = conn.prepareStatement(query);
          stm.setInt(1, getId());
          stm.execute();
@@ -61,7 +61,7 @@ public class GrauConhecimento{
    }
    public boolean atualizar(Connection conn){
       boolean result = false;
-      String query = "UPDATE grau_conhecimento SET nome = ? WHERE id = ? ";
+      String query = "UPDATE graus_conhecimento SET nome = ? WHERE id = ? ";
       try{PreparedStatement stm = conn.prepareStatement(query);
          stm.setString(1,getNome());
          stm.setInt(2, getId());
@@ -76,7 +76,7 @@ public class GrauConhecimento{
    }
 
    public GrauConhecimento carregar(Connection conn){
-      String query = "SELECT id, nome FROM grau_conhecimento WHERE id = ?";
+      String query = "SELECT id, nome FROM graus_conhecimento WHERE id = ?";
       try{PreparedStatement stm = conn.prepareStatement(query);
          stm.setInt(1, getId());
          ResultSet rs = stm.executeQuery();      
@@ -87,6 +87,24 @@ public class GrauConhecimento{
          e.printStackTrace();
       }
       return this;
+   }
+   
+   public ArrayList<GrauConhecimento> getAll(Connection conn){
+      ArrayList<GrauConhecimento> list = new ArrayList<>();
+      String query = "SELECT id, nome FROM graus_conhecimento";
+      try{
+         PreparedStatement stmt = conn.prepareStatement(query);
+         ResultSet rs = stmt.executeQuery();
+         while(rs.next()){
+            GrauConhecimento g = new GrauConhecimento();
+            g.setId(rs.getInt("id"));
+            g.setNome(rs.getString("nome"));
+            list.add(g);
+         }
+      }catch(Exception e){
+         e.printStackTrace();
+      }
+      return list;
    }
 
 
