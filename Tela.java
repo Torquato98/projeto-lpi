@@ -31,7 +31,7 @@ public class Tela extends JFrame implements ActionListener,ListSelectionListener
    private Connection conn;
 
    
-   public Tela (Connection conn){
+   public Tela(Connection conn){
       super("Menu");
       this.conn = conn;
       instanciaJTableEScrollPane(conn);

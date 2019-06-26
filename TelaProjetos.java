@@ -18,7 +18,7 @@ public class TelaProjetos extends JFrame implements ActionListener,ListSelection
    final int ALTURA_TELA = 300;
    final int LARGURA_SCROLL_PANE = LARGURA_TELA - 200;
    final int ALTURA_SCROLL_PANE = ALTURA_TELA - 110;
-   private String[] colunas = {"ID", "Titulo", "Area de Conhecimento", "Duraï¿½ï¿½o","Orï¿½amento"};
+   private String[] colunas = {"ID", "Titulo", "Area de Conhecimento", "Duração","Orçamento"};
    private Object[][] projetos;
    
    
@@ -85,7 +85,7 @@ public class TelaProjetos extends JFrame implements ActionListener,ListSelection
          Projeto projeto = new Projeto(id);
          projeto.select(this.conn);
          if(projeto.getResposta() != 0){
-            JOptionPane.showMessageDialog(this, "Vocï¿½ nï¿½o pode alterar a resposta de um projeto jï¿½ avaliado");
+            JOptionPane.showMessageDialog(this, "Você não pode alterar a resposta de um projeto já avaliado");
          }else{
             RespostaProjeto r = new RespostaProjeto(this.conn, projeto);
          }
@@ -99,7 +99,7 @@ public class TelaProjetos extends JFrame implements ActionListener,ListSelection
             Alterar a = new Alterar(conn,tabelaProjetos.getValueAt(tabelaProjetos.getSelectedRow(),0)+"");
             dispose();
          }catch(Exception ex){
-            JOptionPane.showMessageDialog(this, "Vocï¿½ deve selecionar um item da tabela para alterar");
+            JOptionPane.showMessageDialog(this, "Você deve selecionar um item da tabela para alterar");
          }
       }
       else if(e.getSource()==btnExcluir){

@@ -57,7 +57,7 @@ public class InserirAvaliador extends JFrame implements ActionListener{
       lblCpf = new JLabel("CPF: ");
       lblSexo = new JLabel("Sexo: ");
       lblDataNasc = new JLabel("Data de Nascimento: ");
-      lblInstituicao = new JLabel("Instituiï¿½ï¿½o: ");
+      lblInstituicao = new JLabel("Instituição: ");
       lblAreaPesquisa = new JLabel("Area de Pesquisa: ");
       
       txtNome = new JTextField(15);
