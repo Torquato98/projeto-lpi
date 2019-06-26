@@ -7,22 +7,22 @@ import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-public class Alterar extends JFrame implements ActionListener  {
 
+public class InserirProjeto extends JFrame implements ActionListener  {
    private JLabel lblTitulo,lblDuracao,lblOrcamento,lblCb,lblCb2,lblCbI,lblCbP, lblCbAvaliador;
    private JTextField txtTitulo, txtDuracao, txtOrcamento;
-   private JButton btnAlterar, btnVoltar;
+   private JButton btnInserir,btnVoltar;
    private JComboBox<String> cbGa,cbA,cbI, cbAvaliador;
    private JComboBox<String> cbP;
    private Connection conn;
    private String guarda[],guarda2[],guarda3[];
-   private int id;
+   private Date dt = new Date();
+   private java.sql.Date data = new java.sql.Date (dt.getTime());;
+
    
-   public Alterar(Connection conn,String id) {
-      
-      super("Alterar Projetos");
+   public InserirProjeto(Connection conn){
+      super("Inserir Projetos");
       this.conn = conn;
-      this.id = Integer.parseInt(id);
       
       lblTitulo = new JLabel("Titulo");
       lblDuracao = new JLabel("Duração");
@@ -37,9 +37,9 @@ public class Alterar extends JFrame implements ActionListener  {
       txtDuracao = new JTextField(10);
       txtOrcamento = new JTextField(10);
       
-      btnAlterar = new JButton("Salvar");
+      btnInserir = new JButton("Salvar");
       btnVoltar = new JButton("Voltar");
-      
+             
       cbGa = new JComboBox<String>();
       cbA = new JComboBox<String>();
       cbI = new JComboBox<String>();
@@ -53,7 +53,7 @@ public class Alterar extends JFrame implements ActionListener  {
       
       listarGrandeArea();
       listarInstituicao();
-
+      
       Container cx = getContentPane();
       cx.setLayout(new BorderLayout());
       JPanel pnlBtn = new JPanel(new FlowLayout());
@@ -64,7 +64,7 @@ public class Alterar extends JFrame implements ActionListener  {
       JPanel pnlCombo3 = new JPanel(new FlowLayout(FlowLayout.LEFT));
       JPanel pnlCombo4 = new JPanel(new FlowLayout(FlowLayout.LEFT));
       
-      pnlBtn.add(btnAlterar);
+      pnlBtn.add(btnInserir);
       pnlBtn.add(btnVoltar);
       pnlResto.add(lblTitulo);
       pnlResto.add(txtTitulo);
@@ -94,10 +94,8 @@ public class Alterar extends JFrame implements ActionListener  {
       cx.add(pnlCentro,BorderLayout.CENTER);
       cx.add(pnlBtn,BorderLayout.SOUTH);
       
-      carregarDados();
-      
       btnVoltar.addActionListener(this);
-      btnAlterar.addActionListener(this);
+      btnInserir.addActionListener(this);
       cbGa.addActionListener(this);
       cbI.addActionListener(this);
       
@@ -105,9 +103,10 @@ public class Alterar extends JFrame implements ActionListener  {
       setLocationRelativeTo(null);
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       setVisible(true);
-   
    }
+   
    public void actionPerformed (ActionEvent e){
+      //Pegando dados do combobox
       if(e.getSource()==btnVoltar){
          dispose();
          ConexaoBD bd = new ConexaoBD();
@@ -115,19 +114,18 @@ public class Alterar extends JFrame implements ActionListener  {
             Connection conn = bd.conectar();
             new TelaProjetos(conn);
          } 
-         catch (SQLException f){
-            f.printStackTrace();
+         catch (SQLException x){
+            x.printStackTrace();
          }
-         
       }
-      else if(e.getSource()==btnAlterar){
+      else if (e.getSource()==btnInserir){
          //Pegando dados do combobox
          int instituicao = Integer.parseInt(String.valueOf(cbI.getSelectedItem()).split(" - ")[0]);
          int area_conhecimento = Integer.parseInt(String.valueOf(cbA.getSelectedItem()).split(" - ")[0]);
          int pesquisador = Integer.parseInt(String.valueOf(cbP.getSelectedItem()).split(" - ")[0]);
          int avaliador = Integer.parseInt(String.valueOf(cbAvaliador.getSelectedItem()).split(" - ")[0]);
       
-         Projeto projeto = new Projeto(this.id);
+         Projeto projeto = new Projeto();
          projeto.setTitulo(txtTitulo.getText());
          projeto.setDuracao(txtDuracao.getText());
          projeto.setOrcamento(Double.parseDouble(txtOrcamento.getText()));
@@ -135,7 +133,7 @@ public class Alterar extends JFrame implements ActionListener  {
          projeto.setAvaliador(new Avaliador(avaliador));
          projeto.setAreaDeConhecimento(new AreaDeConhecimento(area_conhecimento));
          projeto.setPesquisador(new Pesquisador(pesquisador));
-         projeto.update(this.conn);
+         projeto.insert(this.conn);
          
          JOptionPane.showMessageDialog(null, "Projeto cadastrado com sucesso");
       }
@@ -160,34 +158,6 @@ public class Alterar extends JFrame implements ActionListener  {
       }
    }
    
-   public void carregarDados(){
-      Projeto projeto = new Projeto(this.id);
-      projeto.select(this.conn);
-      
-      //Dados do projeto
-      txtTitulo.setText(projeto.getTitulo());
-      txtDuracao.setText(projeto.getDuracao());
-      txtOrcamento.setText(String.valueOf(projeto.getOrcamento()));
-      
-      //Grande Area de Conhecimento
-      cbGa.setSelectedItem(projeto.getAreaDeConhecimento().getGrandeAreaDeConhecimento().getId() + " - " + projeto.getAreaDeConhecimento().getGrandeAreaDeConhecimento().getNome());
-      
-      //Area de Conhecimento
-      listarArea(projeto.getAreaDeConhecimento().getId());
-      cbA.setSelectedItem(projeto.getAreaDeConhecimento().getId() + " - " + projeto.getAreaDeConhecimento().getNome());
-      
-      //Instituição
-      cbI.setSelectedItem(projeto.getInstituicao().getId() + " - " + projeto.getInstituicao().getNome());
-      
-      //Pesquisador
-      listarPesquisador(projeto.getInstituicao().getId());
-      cbP.setSelectedItem(projeto.getPesquisador().getId() + " - " + projeto.getPesquisador().getNome());
-      
-      //Avaliador
-      listarAvaliador(projeto.getInstituicao().getId());
-      cbAvaliador.setSelectedItem(projeto.getAvaliador().getId() + " - " + projeto.getAvaliador().getNome());
-   }
-
    public void listarGrandeArea(){
       GrandeAreaDeConhecimento grande = new GrandeAreaDeConhecimento();
       ArrayList<GrandeAreaDeConhecimento> listAreas = grande.getAll(this.conn);
@@ -230,5 +200,5 @@ public class Alterar extends JFrame implements ActionListener  {
          cbAvaliador.addItem(item.getId() + " - " + item.getNome());
       }
    }
-
+      
 }

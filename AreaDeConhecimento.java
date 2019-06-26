@@ -14,6 +14,10 @@ public class AreaDeConhecimento{
 
     }
     
+    public AreaDeConhecimento(GrandeAreaDeConhecimento grandeAreaDeConhecimento){
+         this.grandeAreaDeConhecimento = grandeAreaDeConhecimento;
+    }
+     
     public AreaDeConhecimento(int id){
          this.id = id;
     }
@@ -71,6 +75,29 @@ public class AreaDeConhecimento{
                e.printStackTrace();
          }
          return this;
+    }
+    
+    public ArrayList<AreaDeConhecimento> getAllByGrandeAreaDeConhecimento(Connection conn){
+         String query = "SELECT id, nome, grandes_areas_conhecimento_id FROM areas_conhecimento WHERE grandes_areas_conhecimento_id = ?";
+         ArrayList<AreaDeConhecimento> areasDeConhecimento = new ArrayList<>();
+         try{
+               PreparedStatement stmt = conn.prepareStatement(query);
+               stmt.setInt(1, getGrandeAreaDeConhecimento().getId());
+               ResultSet rs = stmt.executeQuery();
+               
+               while(rs.next()){
+                     AreaDeConhecimento areaDeConhecimento = new AreaDeConhecimento();
+                     areaDeConhecimento.setId(rs.getInt("id"));
+                     areaDeConhecimento.setNome(rs.getString("nome"));
+                     GrandeAreaDeConhecimento grandeAreaDeConhecimento = new GrandeAreaDeConhecimento(rs.getInt("grandes_areas_conhecimento_id"));
+                     grandeAreaDeConhecimento.select(conn);
+                     areaDeConhecimento.setGrandeAreaDeConhecimento(grandeAreaDeConhecimento);
+                     areasDeConhecimento.add(areaDeConhecimento);
+               }
+         }catch(Exception e){
+            e.printStackTrace();
+         }
+         return areasDeConhecimento;
     }
     
     public ArrayList<AreaDeConhecimento> getAll(Connection conn){
