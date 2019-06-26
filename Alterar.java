@@ -25,11 +25,11 @@ public class Alterar extends JFrame implements ActionListener  {
       this.id = Integer.parseInt(id);
       
       lblTitulo = new JLabel("Titulo");
-      lblDuracao = new JLabel("Duração");
-      lblOrcamento = new JLabel("Orçamento");
+      lblDuracao = new JLabel("Duraï¿½ï¿½o");
+      lblOrcamento = new JLabel("Orï¿½amento");
       lblCb = new JLabel("Grande Area de Conhecimento");
       lblCb2 = new JLabel("Area de Conhecimento");
-      lblCbI = new JLabel("Instituição");
+      lblCbI = new JLabel("Instituiï¿½ï¿½o");
       lblCbP = new JLabel("IDPesquisador");
       lblCbAvaliador = new JLabel("Avaliador");
       
@@ -113,7 +113,7 @@ public class Alterar extends JFrame implements ActionListener  {
          ConexaoBD bd = new ConexaoBD();
          try{
             Connection conn = bd.conectar();
-            new Tela(conn);
+            new TelaProjetos(conn);
          } 
          catch (SQLException f){
             f.printStackTrace();
@@ -158,6 +158,17 @@ public class Alterar extends JFrame implements ActionListener  {
             listarAvaliador(Integer.parseInt(dados[0]));
          }
       }
+      else if(e.getSource()==cbI){
+         String dados[] = String.valueOf(cbI.getSelectedItem()).split(" - ");
+         if(!dados[0].equalsIgnoreCase("Escolha")){
+            cbP.removeAllItems();
+            cbP.addItem("Escolha");
+            cbAvaliador.removeAllItems();
+            cbAvaliador.addItem("Escolha");
+            listarPesquisador(Integer.parseInt(dados[0]));
+            listarAvaliador(Integer.parseInt(dados[0]));
+         }
+      }
    }
    
    public void carregarDados(){
@@ -176,7 +187,78 @@ public class Alterar extends JFrame implements ActionListener  {
       listarArea(projeto.getAreaDeConhecimento().getId());
       cbA.setSelectedItem(projeto.getAreaDeConhecimento().getId() + " - " + projeto.getAreaDeConhecimento().getNome());
       
-      //Instituição
+      //Instituiï¿½ï¿½o
+      cbI.setSelectedItem(projeto.getInstituicao().getId() + " - " + projeto.getInstituicao().getNome());
+      
+      //Pesquisador
+      listarPesquisador(projeto.getInstituicao().getId());
+      cbP.setSelectedItem(projeto.getPesquisador().getId() + " - " + projeto.getPesquisador().getNome());
+      
+      //Avaliador
+      listarAvaliador(projeto.getInstituicao().getId());
+      cbAvaliador.setSelectedItem(projeto.getAvaliador().getId() + " - " + projeto.getAvaliador().getNome());
+   }
+
+   public void listarGrandeArea(){
+      GrandeAreaDeConhecimento grande = new GrandeAreaDeConhecimento();
+      ArrayList<GrandeAreaDeConhecimento> listAreas = grande.getAll(this.conn);
+      for(GrandeAreaDeConhecimento item: listAreas){
+         cbGa.addItem(item.getId() + " - " + item.getNome());
+      }
+   }
+   
+   public void listarInstituicao(){
+      Instituicao instituicao = new Instituicao();
+      ArrayList<Instituicao> listInstituicao = instituicao.getAll(this.conn);
+      for(Instituicao item: listInstituicao){
+         cbI.addItem(item.getId() + " - " + item.getNome());
+      }
+   }
+   
+   public void listarArea(int id){
+      AreaDeConhecimento areaDeConhecimento = new AreaDeConhecimento(new GrandeAreaDeConhecimento(id));
+      areaDeConhecimento.getGrandeAreaDeConhecimento().select(this.conn);
+      ArrayList<AreaDeConhecimento> listAreas = areaDeConhecimento.getAll(this.conn);
+      for(AreaDeConhecimento item: listAreas){
+         cbA.addItem(item.getId() + " - " + item.getNome());
+      }
+   }
+   
+   public void listarPesquisador(int id){
+      Pesquisador pesquisador = new Pesquisador(new Instituicao(id));
+      pesquisador.getInstituicao().select(this.conn);
+      ArrayList<Pesquisador> listPesquisador = pesquisador.getAll(this.conn);
+      for(Pesquisador item: listPesquisador){
+         cbP.addItem(item.getId() + " - " + item.getNome());
+      }
+   }
+   
+   public void listarAvaliador(int id){
+      Avaliador avaliador = new Avaliador(new Instituicao(id));
+      avaliador.getInstituicao().select(this.conn);
+      ArrayList<Avaliador> listAvaliador = avaliador.getAll(this.conn);
+      for(Avaliador item: listAvaliador){
+         cbAvaliador.addItem(item.getId() + " - " + item.getNome());
+      }
+   }
+   
+   public void carregarDados(){
+      Projeto projeto = new Projeto(this.id);
+      projeto.select(this.conn);
+      
+      //Dados do projeto
+      txtTitulo.setText(projeto.getTitulo());
+      txtDuracao.setText(projeto.getDuracao());
+      txtOrcamento.setText(String.valueOf(projeto.getOrcamento()));
+      
+      //Grande Area de Conhecimento
+      cbGa.setSelectedItem(projeto.getAreaDeConhecimento().getGrandeAreaDeConhecimento().getId() + " - " + projeto.getAreaDeConhecimento().getGrandeAreaDeConhecimento().getNome());
+      
+      //Area de Conhecimento
+      listarArea(projeto.getAreaDeConhecimento().getId());
+      cbA.setSelectedItem(projeto.getAreaDeConhecimento().getId() + " - " + projeto.getAreaDeConhecimento().getNome());
+      
+      //Instituiï¿½ï¿½o
       cbI.setSelectedItem(projeto.getInstituicao().getId() + " - " + projeto.getInstituicao().getNome());
       
       //Pesquisador

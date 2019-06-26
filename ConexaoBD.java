@@ -18,7 +18,7 @@ public class ConexaoBD {
       String porta = "3306";
       String database = "projetolpi";
       String usuario = "root";
-      String senha = "";
+      String senha = "!Jcada1011200117";
       return DriverManager
          	.getConnection("jdbc:mysql://"+servidor+":"+porta+
             "/"+database+"?user="+usuario+"&password="+senha);

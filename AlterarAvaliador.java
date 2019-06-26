@@ -62,7 +62,7 @@ public class AlterarAvaliador extends JFrame implements ActionListener{
       lblCpf = new JLabel("CPF: ");
       lblSexo = new JLabel("Sexo: ");
       lblDataNasc = new JLabel("Data de Nascimento: ");
-      lblInstituicao = new JLabel("Instituição: ");
+      lblInstituicao = new JLabel("Instituiï¿½ï¿½o: ");
       lblAreaPesquisa = new JLabel("Area de Pesquisa: ");
       
       txtNome = new JTextField(15);
@@ -167,7 +167,7 @@ public class AlterarAvaliador extends JFrame implements ActionListener{
          }
       }else if(e.getSource() == btnVoltar){
          dispose();
-         new TelaPesquisadores(this.conn);
+         new TelaAvaliadores(this.conn);
       }
    }
    

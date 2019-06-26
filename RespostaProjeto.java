@@ -86,6 +86,8 @@ public class RespostaProjeto extends JFrame implements ActionListener{
          JOptionPane.showMessageDialog(this, "Projeto " + this.projeto.getTitulo() + " " + strResposta + " com sucesso");
       }else if(e.getSource() == btnVoltar){
          dispose();
+         TelaProjetos projeto = new TelaProjetos(conn);
+         
       }
    }
    
