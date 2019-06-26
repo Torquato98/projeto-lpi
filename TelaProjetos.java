@@ -81,14 +81,18 @@ public class TelaProjetos extends JFrame implements ActionListener,ListSelection
          InserirProjeto i = new InserirProjeto(conn);
       }
       else if(e.getSource()==btnResposta){
-        int id = Integer.parseInt(tabelaProjetos.getValueAt(tabelaProjetos.getSelectedRow(),0)+"");
-         Projeto projeto = new Projeto(id);
-         projeto.select(this.conn);
-         if(projeto.getResposta() != 0){
-            JOptionPane.showMessageDialog(this, "Você não pode alterar a resposta de um projeto já avaliado");
-         }else{
-            dispose();
-            RespostaProjeto r = new RespostaProjeto(this.conn, projeto);
+         try{
+            int id = Integer.parseInt(tabelaProjetos.getValueAt(tabelaProjetos.getSelectedRow(),0)+"");
+            Projeto projeto = new Projeto(id);
+            projeto.select(this.conn);
+            if(projeto.getResposta() != 0){
+               JOptionPane.showMessageDialog(this, "Você não pode alterar a resposta de um projeto já avaliado");
+            }else{
+               dispose();
+               RespostaProjeto r = new RespostaProjeto(this.conn, projeto);
+            }
+         }catch(Exception ex){
+            JOptionPane.showMessageDialog(this, "Você deve selecionar um item da tabela para avaliar");
          }
       }
       else if(e.getSource()==btnVoltar){
@@ -104,18 +108,22 @@ public class TelaProjetos extends JFrame implements ActionListener,ListSelection
          }
       }
       else if(e.getSource()==btnExcluir){
-         int i = JOptionPane.showOptionDialog(null, "Tem certeza que deseja excluir o projeto "+tabelaProjetos.getValueAt(tabelaProjetos.getSelectedRow(),1)+"?", "ATENÃ‡ÃƒO",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,null,null,null); 
-         if (i == JOptionPane.YES_OPTION) { 
-            Projeto projeto = new Projeto(Integer.parseInt(tabelaProjetos.getValueAt(tabelaProjetos.getSelectedRow(),0)+""));
-            projeto.remove(conn);
-            instanciaJTableEScrollPane(conn); 
-            pnlCentro.add(rolagem);
-            caixa.add(pnlCentro, BorderLayout.CENTER);
-            validate();
-            repaint();
-            dispose();
-            new TelaProjetos(this.conn);
-         } 
+         try{
+            int i = JOptionPane.showOptionDialog(null, "Tem certeza que deseja excluir o projeto "+tabelaProjetos.getValueAt(tabelaProjetos.getSelectedRow(),1)+"?", "ATENÃ‡ÃƒO",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,null,null,null); 
+            if (i == JOptionPane.YES_OPTION) { 
+               Projeto projeto = new Projeto(Integer.parseInt(tabelaProjetos.getValueAt(tabelaProjetos.getSelectedRow(),0)+""));
+               projeto.remove(conn);
+               instanciaJTableEScrollPane(conn); 
+               pnlCentro.add(rolagem);
+               caixa.add(pnlCentro, BorderLayout.CENTER);
+               validate();
+               repaint();
+               dispose();
+               new TelaProjetos(this.conn);
+            } 
+         }catch(Exception ex){
+            JOptionPane.showMessageDialog(this, "Você deve selecionar um projeto para excluir");
+         }
       }
    
    }

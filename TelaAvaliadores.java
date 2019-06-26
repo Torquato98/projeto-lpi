@@ -101,7 +101,7 @@ public class TelaAvaliadores extends JFrame implements ActionListener, ListSelec
             AlterarAvaliador a = new AlterarAvaliador(conn,Integer.parseInt(tabelaAvaliadores.getValueAt(tabelaAvaliadores.getSelectedRow(),0)+""));
             dispose();
          }catch(Exception ex){
-            JOptionPane.showMessageDialog(this, "Vocï¿½ deve selecionar um item da tabela para alterar");
+            JOptionPane.showMessageDialog(this, "Você deve selecionar um item da tabela para alterar");
          }
       }
       else if(e.getSource() == btnVoltar){
@@ -109,19 +109,22 @@ public class TelaAvaliadores extends JFrame implements ActionListener, ListSelec
          AgenciaApp a = new AgenciaApp(conn);
       }
       else if(e.getSource() == btnExcluir){
-      int i = JOptionPane.showOptionDialog(null, "Tem certeza que deseja excluir o Avaliador "+tabelaAvaliadores.getValueAt(tabelaAvaliadores.getSelectedRow(),1)+"?", "ATENï¿½ï¿½O",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,null,null,null); 
-         if (i == JOptionPane.YES_OPTION) { 
-            Avaliador avaliador = new Avaliador(Integer.parseInt(tabelaAvaliadores.getValueAt(tabelaAvaliadores.getSelectedRow(),0)+""));
-            avaliador.remove(conn);
-            instanciaJTableEScrollPane(conn); 
-            pnlCentro.add(rolagem);
-            caixa.add(pnlCentro, BorderLayout.CENTER);
-            validate();
-            repaint();
-            dispose();
-            new TelaAvaliadores(this.conn);
-         } 
-
+         try{
+            int i = JOptionPane.showOptionDialog(null, "Tem certeza que deseja excluir o Avaliador "+tabelaAvaliadores.getValueAt(tabelaAvaliadores.getSelectedRow(),1)+"?", "ATENï¿½ï¿½O",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,null,null,null); 
+            if (i == JOptionPane.YES_OPTION) { 
+               Avaliador avaliador = new Avaliador(Integer.parseInt(tabelaAvaliadores.getValueAt(tabelaAvaliadores.getSelectedRow(),0)+""));
+               avaliador.remove(conn);
+               instanciaJTableEScrollPane(conn); 
+               pnlCentro.add(rolagem);
+               caixa.add(pnlCentro, BorderLayout.CENTER);
+               validate();
+               repaint();
+               dispose();
+               new TelaAvaliadores(this.conn);
+            } 
+         }catch(Exception ex){
+            JOptionPane.showMessageDialog(this, "Você deve selecionar um avaliador para poder excluir");
+         }
       }
    }
    

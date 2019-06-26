@@ -1,3 +1,5 @@
+import java.awt.Container;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -6,6 +8,8 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 public class AgenciaApp extends JFrame implements ActionListener{
 
@@ -27,12 +31,18 @@ public class AgenciaApp extends JFrame implements ActionListener{
    private JMenuItem menuAvaliadoresInserir;
    private JMenuItem menuAvaliadoresConsultar;
    
+   private Container caixa;
+   
+   private JLabel lblWelcome;
+   
    private Connection conn;
    
    public AgenciaApp(Connection conn){
       super("Agência");
       
       this.conn = conn;
+      
+      lblWelcome = new JLabel("Bem vindo", SwingConstants.CENTER);
       
       menuBar = new JMenuBar();
       menuProjetos = new JMenu("Projetos");
@@ -70,6 +80,10 @@ public class AgenciaApp extends JFrame implements ActionListener{
       
       menuAvaliadoresInserir.addActionListener(this);
       menuAvaliadoresConsultar.addActionListener(this);
+      
+      caixa = getContentPane();
+      caixa.setLayout(new FlowLayout());
+      caixa.add(lblWelcome);
       
       setSize(LARGURA_TELA, ALTURA_TELA);
       setLocationRelativeTo(null);

@@ -98,18 +98,22 @@ public class TelaPesquisadores extends JFrame implements ActionListener, ListSel
          }
       }
       else if(e.getSource()==btnExcluir){
-         int i = JOptionPane.showOptionDialog(null, "Tem certeza que deseja excluir o pesquisador "+tabelaPesquisadores.getValueAt(tabelaPesquisadores.getSelectedRow(),1)+"?", "ATENÇÃO",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,null,null,null); 
-         if (i == JOptionPane.YES_OPTION) { 
-            Pesquisador pesquisador = new Pesquisador(Integer.parseInt(tabelaPesquisadores.getValueAt(tabelaPesquisadores.getSelectedRow(),0)+""));
-            pesquisador.remove(conn);
-            instanciaJTableEScrollPane(conn); 
-            pnlCentro.add(rolagem);
-            caixa.add(pnlCentro, BorderLayout.CENTER);
-            validate();
-            repaint();
-            dispose();
-            new TelaPesquisadores(this.conn);
-         } 
+         try{
+            int i = JOptionPane.showOptionDialog(null, "Tem certeza que deseja excluir o pesquisador "+tabelaPesquisadores.getValueAt(tabelaPesquisadores.getSelectedRow(),1)+"?", "ATENÇÃO",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,null,null,null); 
+            if (i == JOptionPane.YES_OPTION) { 
+               Pesquisador pesquisador = new Pesquisador(Integer.parseInt(tabelaPesquisadores.getValueAt(tabelaPesquisadores.getSelectedRow(),0)+""));
+               pesquisador.remove(conn);
+               instanciaJTableEScrollPane(conn); 
+               pnlCentro.add(rolagem);
+               caixa.add(pnlCentro, BorderLayout.CENTER);
+               validate();
+               repaint();
+               dispose();
+               new TelaPesquisadores(this.conn);
+            } 
+         }catch(Exception ex){
+            JOptionPane.showMessageDialog(this, "Você deve selecionar um pesquisador para excluir");
+         }
       }
       else if(e.getSource() == btnVoltar){
          dispose();
