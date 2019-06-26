@@ -41,7 +41,7 @@ public class TelaAvaliadores extends JFrame implements ActionListener, ListSelec
    private JLabel lblAvaliador;
    
    private Object[][] avaliadores;
-   private String[] colunas = {"ID","Nome", "Sexo", "RG", "CPF", "Data de Nascimento", "Grau de Conhecimento", "Instituiï¿½ï¿½o", "Area de Pesquisa"};
+   private String[] colunas = {"ID","Nome", "Sexo", "RG", "CPF", "Data de Nascimento", "Grau de Conhecimento", "Instituição", "Area de Pesquisa"};
    
    private JTable tabelaAvaliadores;
    

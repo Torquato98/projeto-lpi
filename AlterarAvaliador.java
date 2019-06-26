@@ -23,6 +23,7 @@ public class AlterarAvaliador extends JFrame implements ActionListener{
    private JLabel lblDataNasc;
    private JLabel lblInstituicao;
    private JLabel lblAreaPesquisa;
+   private JLabel lblGrau;
    
    private JTextField txtRg;
    private JTextField txtCpf;
@@ -62,8 +63,9 @@ public class AlterarAvaliador extends JFrame implements ActionListener{
       lblCpf = new JLabel("CPF: ");
       lblSexo = new JLabel("Sexo: ");
       lblDataNasc = new JLabel("Data de Nascimento: ");
-      lblInstituicao = new JLabel("Instituiï¿½ï¿½o: ");
+      lblInstituicao = new JLabel("Instituição: ");
       lblAreaPesquisa = new JLabel("Area de Pesquisa: ");
+      lblGrau = new JLabel("Grau de Conhecimento: ");
       
       txtNome = new JTextField(15);
       txtRg = new JTextField(15);
@@ -111,6 +113,8 @@ public class AlterarAvaliador extends JFrame implements ActionListener{
       pnlCentroNorte2.add(txtCpf);
       pnlCentroNorte2.add(lblDataNasc);
       pnlCentroNorte2.add(txtDataNasc);
+      pnlCentroNorte2.add(lblGrau);
+      pnlCentroNorte2.add(cmbGrau);
       
       pnlCentro.add(lblInstituicao);
       pnlCentro.add(cmbInstituicao);
@@ -132,7 +136,7 @@ public class AlterarAvaliador extends JFrame implements ActionListener{
       
       setVisible(true);
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-      setSize(650,200);
+      setSize(800,200);
       setLocationRelativeTo(null);
    }
    
@@ -159,6 +163,7 @@ public class AlterarAvaliador extends JFrame implements ActionListener{
          avaliador.setGrau(String.valueOf(cmbGrau.getSelectedItem()));
          avaliador.setAreaPesquisa(new AreaPesquisa(area_pesquisa_id));
          avaliador.setInstituicao(new Instituicao(instituicao_id));
+         avaliador.setGrau(String.valueOf(cmbGrau.getSelectedItem()));
          boolean response = avaliador.update(this.conn);
          if(response){
             JOptionPane.showMessageDialog(this, "Avaliador alterado com sucesso");
@@ -193,9 +198,10 @@ public class AlterarAvaliador extends JFrame implements ActionListener{
       txtCpf.setText(this.avaliador.getCpf());
       txtDataNasc.setText(formatDataBr(this.avaliador.getDataNasc()+""));
       
-      cmbSexo.setSelectedItem(this.avaliador.getSexo());
+      cmbSexo.setSelectedItem(this.avaliador.getSexo()+"");
       cmbAreaPesquisa.setSelectedItem(this.avaliador.getAreaPesquisa().getId() + " - " + this.avaliador.getAreaPesquisa().getNome());
       cmbInstituicao.setSelectedItem(this.avaliador.getInstituicao().getId() + " - " + this.avaliador.getInstituicao().getNome());
+      cmbGrau.setSelectedItem(this.avaliador.getGrau());
    } 
 
 }

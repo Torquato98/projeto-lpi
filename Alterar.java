@@ -25,12 +25,12 @@ public class Alterar extends JFrame implements ActionListener  {
       this.id = Integer.parseInt(id);
       
       lblTitulo = new JLabel("Titulo");
-      lblDuracao = new JLabel("Duraï¿½ï¿½o");
-      lblOrcamento = new JLabel("Orï¿½amento");
+      lblDuracao = new JLabel("Duração");
+      lblOrcamento = new JLabel("Orçamento");
       lblCb = new JLabel("Grande Area de Conhecimento");
       lblCb2 = new JLabel("Area de Conhecimento");
-      lblCbI = new JLabel("Instituiï¿½ï¿½o");
-      lblCbP = new JLabel("IDPesquisador");
+      lblCbI = new JLabel("Instituição");
+      lblCbP = new JLabel("Pesquisador");
       lblCbAvaliador = new JLabel("Avaliador");
       
       txtTitulo = new JTextField(10);
@@ -187,7 +187,7 @@ public class Alterar extends JFrame implements ActionListener  {
       listarArea(projeto.getAreaDeConhecimento().getId());
       cbA.setSelectedItem(projeto.getAreaDeConhecimento().getId() + " - " + projeto.getAreaDeConhecimento().getNome());
       
-      //Instituiï¿½ï¿½o
+      //Instituição
       cbI.setSelectedItem(projeto.getInstituicao().getId() + " - " + projeto.getInstituicao().getNome());
       
       //Pesquisador

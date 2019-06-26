@@ -23,6 +23,7 @@ public class InserirAvaliador extends JFrame implements ActionListener{
    private JLabel lblDataNasc;
    private JLabel lblInstituicao;
    private JLabel lblAreaPesquisa;
+   private JLabel lblGrauConhecimento;
    
    private JTextField txtRg;
    private JTextField txtCpf;
@@ -59,6 +60,7 @@ public class InserirAvaliador extends JFrame implements ActionListener{
       lblDataNasc = new JLabel("Data de Nascimento: ");
       lblInstituicao = new JLabel("Instituição: ");
       lblAreaPesquisa = new JLabel("Area de Pesquisa: ");
+      lblGrauConhecimento = new JLabel("Grau de Conhecimento: ");
       
       txtNome = new JTextField(15);
       txtRg = new JTextField(15);
@@ -105,6 +107,8 @@ public class InserirAvaliador extends JFrame implements ActionListener{
       pnlCentroNorte2.add(txtCpf);
       pnlCentroNorte2.add(lblDataNasc);
       pnlCentroNorte2.add(txtDataNasc);
+      pnlCentroNorte2.add(lblGrauConhecimento);
+      pnlCentroNorte2.add(cmbGrau);
       
       pnlCentro.add(lblInstituicao);
       pnlCentro.add(cmbInstituicao);
@@ -126,7 +130,7 @@ public class InserirAvaliador extends JFrame implements ActionListener{
       
       setVisible(true);
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-      setSize(650,200);
+      setSize(750,200);
       setLocationRelativeTo(null);
    }
    
@@ -149,6 +153,7 @@ public class InserirAvaliador extends JFrame implements ActionListener{
          avaliador.setGrau(String.valueOf(cmbGrau.getSelectedItem()));
          avaliador.setAreaPesquisa(new AreaPesquisa(area_pesquisa_id));
          avaliador.setInstituicao(new Instituicao(instituicao_id));
+         avaliador.setGrau(String.valueOf(cmbGrau.getSelectedItem()));
          boolean response = avaliador.insert(this.conn);
          if(response){
             JOptionPane.showMessageDialog(this, "Avaliador cadastrado com sucesso");

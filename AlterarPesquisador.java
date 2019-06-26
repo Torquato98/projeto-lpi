@@ -171,7 +171,7 @@ public class AlterarPesquisador extends JFrame implements ActionListener{
       txtCpf.setText(pesquisador.getCpf());
       txtDataNasc.setText(formatDataBr(pesquisador.getDataNasc() + ""));
 
-      cmbSexo.setSelectedItem(pesquisador.getSexo());
+      cmbSexo.setSelectedItem(pesquisador.getSexo()+"");
       cmbInstituicao.setSelectedItem(pesquisador.getInstituicao().getId() + " - " + pesquisador.getInstituicao().getNome());
       cmbGrauConhecimento.setSelectedItem(pesquisador.getPesquisadorGrauConhecimento().getGrauConhecimento().getId() + " - " + pesquisador.getPesquisadorGrauConhecimento().getGrauConhecimento().getNome());
    }

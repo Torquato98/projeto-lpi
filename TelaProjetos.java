@@ -18,7 +18,7 @@ public class TelaProjetos extends JFrame implements ActionListener,ListSelection
    final int ALTURA_TELA = 300;
    final int LARGURA_SCROLL_PANE = LARGURA_TELA - 200;
    final int ALTURA_SCROLL_PANE = ALTURA_TELA - 110;
-   private String[] colunas = {"ID", "Titulo", "Area de Conhecimento", "Duração","Orçamento"};
+   private String[] colunas = {"ID", "Titulo", "Area de Conhecimento", "Duração","Orçamento", "Status"};
    private Object[][] projetos;
    
    
@@ -87,6 +87,7 @@ public class TelaProjetos extends JFrame implements ActionListener,ListSelection
          if(projeto.getResposta() != 0){
             JOptionPane.showMessageDialog(this, "Você não pode alterar a resposta de um projeto já avaliado");
          }else{
+            dispose();
             RespostaProjeto r = new RespostaProjeto(this.conn, projeto);
          }
       }
@@ -132,7 +133,9 @@ public class TelaProjetos extends JFrame implements ActionListener,ListSelection
             "\n"+tabelaProjetos.getColumnName(3)+": "+
             tabelaProjetos.getValueAt(tabelaProjetos.getSelectedRow(),3)+
             "\n"+tabelaProjetos.getColumnName(4)+": "+
-            tabelaProjetos.getValueAt(tabelaProjetos.getSelectedRow(),4);
+            tabelaProjetos.getValueAt(tabelaProjetos.getSelectedRow(),4)+
+            "\n"+tabelaProjetos.getColumnName(5)+": "+
+            tabelaProjetos.getValueAt(tabelaProjetos.getSelectedRow(),5);
             
          JOptionPane.showMessageDialog(this, resultado);
       }
@@ -148,13 +151,21 @@ public class TelaProjetos extends JFrame implements ActionListener,ListSelection
       for(int i = 0; i < lista.size(); i++){
          projeto = lista.get(i);
          
+         String resposta = "Aguardando";
+         if(projeto.getResposta() == 1){
+            resposta = "Reprovado";
+         }
+         if(projeto.getResposta() == 2){
+            resposta = "Aprovado";
+         }
          saida[i][0] = projeto.getId()+"";
          saida[i][1] = projeto.getTitulo();
          saida[i][2] = projeto.getAreaDeConhecimento().getNome();
          saida[i][3] = projeto.getDuracao();
          //formata o numero com 2 casas decimais
          saida[i][4] = String.format("%.2f", projeto.getOrcamento());
-         
+         saida[i][5] = resposta;
+            
       }
       
       return saida;
