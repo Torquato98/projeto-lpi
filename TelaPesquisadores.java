@@ -93,6 +93,7 @@ public class TelaPesquisadores extends JFrame implements ActionListener, ListSel
             AlterarPesquisador a = new AlterarPesquisador(conn,Integer.parseInt(tabelaPesquisadores.getValueAt(tabelaPesquisadores.getSelectedRow(),0)+""));
             dispose();
          }catch(Exception ex){
+            System.out.println(ex);
             JOptionPane.showMessageDialog(this, "Você deve selecionar um item da tabela para alterar");
          }
       }

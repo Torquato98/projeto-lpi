@@ -41,7 +41,7 @@ public class TelaAvaliadores extends JFrame implements ActionListener, ListSelec
    private JLabel lblAvaliador;
    
    private Object[][] avaliadores;
-   private String[] colunas = {"Nome", "Sexo", "RG", "CPF", "Data de Nascimento", "Grau de Conhecimento", "Instituição", "Area de Pesquisa"};
+   private String[] colunas = {"ID","Nome", "Sexo", "RG", "CPF", "Data de Nascimento", "Grau de Conhecimento", "Instituição", "Area de Pesquisa"};
    
    private JTable tabelaAvaliadores;
    
@@ -92,7 +92,19 @@ public class TelaAvaliadores extends JFrame implements ActionListener, ListSelec
    }
    
    public void actionPerformed(ActionEvent e){
-      if(e.getSource() == btnVoltar){
+      if(e.getSource() == btnInserir){
+         dispose();
+         new InserirAvaliador(conn);
+      }
+      else if(e.getSource() == btnAlterar){
+         try{
+            AlterarAvaliador a = new AlterarAvaliador(conn,Integer.parseInt(tabelaAvaliadores.getValueAt(tabelaAvaliadores.getSelectedRow(),0)+""));
+            dispose();
+         }catch(Exception ex){
+            JOptionPane.showMessageDialog(this, "Você deve selecionar um item da tabela para alterar");
+         }
+      }
+      else if(e.getSource() == btnVoltar){
          dispose();
          AgenciaApp a = new AgenciaApp(conn);
       }
@@ -127,14 +139,15 @@ public class TelaAvaliadores extends JFrame implements ActionListener, ListSelec
       Avaliador avaliador;
       for(int i = 0; i < lista.size(); i++){
          avaliador = lista.get(i);
-         saida[i][0] = avaliador.getNome()+"";
-         saida[i][1] = avaliador.getSexo()+"";
-         saida[i][2] = avaliador.getRg();
-         saida[i][3] = avaliador.getCpf();
-         saida[i][4] = avaliador.getDataNasc()+"";
-         saida[i][5] = avaliador.getGrau();
-         saida[i][6] = avaliador.getInstituicao().getNome();
-         saida[i][7] = avaliador.getAreaPesquisa().getNome(); 
+         saida[i][0] = avaliador.getId()+"";
+         saida[i][1] = avaliador.getNome();
+         saida[i][2] = avaliador.getSexo()+"";
+         saida[i][3] = avaliador.getRg();
+         saida[i][4] = avaliador.getCpf();
+         saida[i][5] = avaliador.getDataNasc()+"";
+         saida[i][6] = avaliador.getGrau();
+         saida[i][7] = avaliador.getInstituicao().getNome();
+         saida[i][8] = avaliador.getAreaPesquisa().getNome(); 
       }
       
       return saida;

@@ -150,7 +150,7 @@ public class Avaliador{
    
    public boolean update(Connection conn){
       boolean result = false;
-      String query = "UPDATE avaliadores SET grau = ?, nome = ?, sexo = ?, rg = ?, cpf = ?, data_nasc = ?, instituicao_id = ?, areas_pesquisa_id = ? WHERE id = ?";
+      String query = "UPDATE avaliadores SET grau = ?, nome = ?, sexo = ?, rg = ?, cpf = ?, dt_nasc = ?, instituicao_id = ?, areas_pesquisa_id = ? WHERE id = ?";
       try{
          PreparedStatement stmt = conn.prepareStatement(query);
          stmt.setString(1, getGrau());
